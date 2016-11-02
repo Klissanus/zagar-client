@@ -24,6 +24,8 @@ import org.jetbrains.annotations.NotNull;
 import zagar.util.Reporter;
 import zagar.view.Cell;
 import zagar.view.GameFrame;
+import zagar.view.inputforms.HostInputForm;
+import zagar.view.inputforms.LoginPasswordInputForm;
 
 import static zagar.GameConstants.*;
 
@@ -48,7 +50,7 @@ public class Game {
   @NotNull
   public static String serverToken;
   @NotNull
-  public static String login = DEFAULT_LOGIN;
+  public static String login;
   public static int spawnPlayer = -1;
   @NotNull
   public static HashMap<Integer, String> cellNames = new HashMap<>();
@@ -61,11 +63,21 @@ public class Game {
   @NotNull
   public String gameServerUrl;
   @NotNull
-  public AuthClient authClient = new AuthClient();
+  public AuthClient authClient;
 
   public Game() {
-    this.gameServerUrl = "ws://" + (JOptionPane.showInputDialog(null, "Host", DEFAULT_GAME_SERVER_HOST + ":" + DEFAULT_GAME_SERVER_PORT));
-
+    HostInputForm gameServerUrlInput =
+            new HostInputForm("game server",DEFAULT_GAME_SERVER_HOST,DEFAULT_GAME_SERVER_PORT);
+    if (!gameServerUrlInput.showForm()) {
+      System.exit(0);
+    }
+    this.gameServerUrl = "ws://" + gameServerUrlInput.getHost() + ":" + gameServerUrlInput.getPort();
+    HostInputForm authServerUrlInput =
+            new HostInputForm("authentication server",DEFAULT_ACCOUNT_SERVER_HOST,DEFAULT_ACCOUNT_SERVER_PORT);
+    if (!authServerUrlInput.showForm()) {
+      System.exit(0);
+    }
+    authClient = new AuthClient(authServerUrlInput.getHost(),authServerUrlInput.getPort());
     authenticate();
 
     this.spawnPlayer = 100;
@@ -93,22 +105,19 @@ public class Game {
       if (authOption == null) {
         return;
       }
-      this.login = JOptionPane.showInputDialog(null, "Login", DEFAULT_LOGIN);
-      String password = (JOptionPane.showInputDialog(null, "Password", DEFAULT_PASSWORD));
-      if (login == null) {
-        login = DEFAULT_LOGIN;
-      }
-      if (password == null) {
-        password = DEFAULT_PASSWORD;
-      }
-      if (authOption == AuthOption.REGISTER) {
-        if (!authClient.register(login, password)) {
-          Reporter.reportFail("Register failed", "Register failed");
-        }
-      } else {
-        serverToken = authClient.login(Game.login, password);
-        if (serverToken == null) {
-          Reporter.reportWarn("Login failed", "Login failed");
+      LoginPasswordInputForm loginForm = new LoginPasswordInputForm();
+      if (loginForm.showForm()) {
+        this.login = loginForm.getLogin();
+        String password = loginForm.getPassword();
+        if (authOption == AuthOption.REGISTER) {
+          if (!authClient.register(login, password)) {
+            Reporter.reportFail("Register failed", "Register failed");
+          }
+        } else {
+          serverToken = authClient.login(Game.login, password);
+          if (serverToken == null) {
+            Reporter.reportWarn("Login failed", "Login failed");
+          }
         }
       }
     }
@@ -259,7 +268,7 @@ public class Game {
   }
 
   private enum AuthOption {
-    REGISTER, LOGIN;
+    REGISTER, LOGIN
   }
 
   public enum GameState {

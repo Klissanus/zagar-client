@@ -5,20 +5,24 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import zagar.GameConstants;
 
 import java.io.IOException;
-
-import static zagar.GameConstants.DEFAULT_ACCOUNT_SERVER_HOST;
-import static zagar.GameConstants.DEFAULT_ACCOUNT_SERVER_PORT;
 
 public class AuthClient {
   @NotNull
   private static final Logger log = LogManager.getLogger(AuthClient.class);
   @NotNull
-  private static final String SERVICE_URL = "http://" + DEFAULT_ACCOUNT_SERVER_HOST + ":" + DEFAULT_ACCOUNT_SERVER_PORT;
+  private String accountServerHost;
+  int accountServerPort;
+  @NotNull
+  private String serviceUrl = "http://" + accountServerHost + ":" + accountServerPort;
   @NotNull
   private final OkHttpClient client = new OkHttpClient();
+
+  public AuthClient(@NotNull String accountServerHost,int accountServerPort) {
+    this.accountServerHost=accountServerHost;
+    this.accountServerPort=accountServerPort;
+  }
 
   public boolean register(@NotNull String user, @NotNull String password) {
     log.info("Trying to register user=" + user);
@@ -28,7 +32,7 @@ public class AuthClient {
         String.format("user=%s&password=%s", user, password)
     );
 
-    String requestUrl = SERVICE_URL + "/auth/register";
+    String requestUrl = serviceUrl + "/auth/register";
     Request request = new Request.Builder()
         .url(requestUrl)
         .post(body)
@@ -53,7 +57,7 @@ public class AuthClient {
         mediaType,
         String.format("user=%s&password=%s", user, password)
     );
-    String requestUrl = SERVICE_URL + "/auth/login";
+    String requestUrl = serviceUrl + "/auth/login";
     Request request = new Request.Builder()
         .url(requestUrl)
         .post(body)
@@ -78,7 +82,7 @@ public class AuthClient {
         mediaType,
         ""
     );
-    String requestUrl = SERVICE_URL + "/auth/logout";
+    String requestUrl = serviceUrl + "/auth/logout";
     Request request = new Request.Builder()
         .url(requestUrl)
         .post(body)
