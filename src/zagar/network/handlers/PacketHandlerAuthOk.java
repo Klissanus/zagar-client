@@ -2,7 +2,6 @@ package zagar.network.handlers;
 
 import protocol.CommandThankYou;
 import zagar.Game;
-import zagar.network.ServerConnectionSocket;
 import zagar.util.JSONHelper;
 
 import java.io.IOException;
@@ -17,4 +16,4 @@ public class PacketHandlerAuthOk {
       e.printStackTrace();
     }
   }
-
+}
