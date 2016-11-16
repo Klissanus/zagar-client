@@ -1,18 +1,15 @@
 package zagar.network.handlers;
 
-import java.nio.ByteBuffer;
-import java.util.Collections;
-
-import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import protocol.CommandLeaderBoard;
-import protocol.CommandReplicate;
+import org.jetbrains.annotations.NotNull;
+import protocol.commands.CommandReplicate;
+import zagar.Game;
 import zagar.util.JSONDeserializationException;
 import zagar.util.JSONHelper;
 import zagar.view.Cell;
-import zagar.Game;
-import org.jetbrains.annotations.NotNull;
+
+import java.util.Collections;
 
 public class PacketHandlerReplicate {
   @NotNull

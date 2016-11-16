@@ -1,6 +1,6 @@
 package zagar.network.handlers;
 
-import protocol.CommandThankYou;
+import protocol.commands.CommandThankYou;
 import zagar.Game;
 import zagar.util.JSONHelper;
 

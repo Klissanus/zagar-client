@@ -1,21 +1,29 @@
 package zagar.network;
 
-import java.io.IOException;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
 import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.annotations.*;
-
-import protocol.*;
-import zagar.network.handlers.*;
-import zagar.network.packets.PacketAuth;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
+import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.jetbrains.annotations.NotNull;
-import zagar.util.JSONHelper;
+import protocol.commands.CommandAuthFail;
+import protocol.commands.CommandAuthOk;
+import protocol.commands.CommandLeaderBoard;
+import protocol.commands.CommandReplicate;
 import zagar.Game;
+import zagar.network.handlers.PacketHandlerAuthFail;
+import zagar.network.handlers.PacketHandlerAuthOk;
+import zagar.network.handlers.PacketHandlerLeaderBoard;
+import zagar.network.handlers.PacketHandlerReplicate;
+import zagar.network.packets.PacketAuth;
+import zagar.util.JSONHelper;
+
+import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 @WebSocket(maxTextMessageSize = 1024)
 public class ServerConnectionSocket {

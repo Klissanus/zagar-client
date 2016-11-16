@@ -1,14 +1,13 @@
 package zagar.network.packets;
 
-import java.io.IOException;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
-
 import org.jetbrains.annotations.NotNull;
-import protocol.CommandMove;
+import protocol.commands.CommandMove;
 import zagar.util.JSONHelper;
+
+import java.io.IOException;
 
 public class PacketMove {
   @NotNull
