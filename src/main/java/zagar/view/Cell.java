@@ -1,8 +1,8 @@
-package zagar.view;
+package main.java.zagar.view;
 
 import org.jetbrains.annotations.NotNull;
-import zagar.Game;
-import zagar.Main;
+import main.java.zagar.Game;
+import main.java.zagar.Main;
 
 import java.awt.Color;
 import java.awt.Font;

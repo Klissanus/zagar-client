@@ -1,11 +1,11 @@
-package zagar.network.handlers;
+package main.java.zagar.network.handlers;
 
 import org.jetbrains.annotations.NotNull;
 import protocol.commands.CommandAuthFail;
-import zagar.Game;
-import zagar.util.JSONDeserializationException;
-import zagar.util.JSONHelper;
-import zagar.util.Reporter;
+import main.java.zagar.Game;
+import main.java.zagar.util.JSONDeserializationException;
+import main.java.zagar.util.JSONHelper;
+import main.java.zagar.util.Reporter;
 
 public class PacketHandlerAuthFail {
   public PacketHandlerAuthFail(@NotNull String json) {

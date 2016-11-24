@@ -1,4 +1,4 @@
-package zagar.util;
+package main.java.zagar.util;
 
 import com.google.gson.*;
 import org.jetbrains.annotations.NotNull;

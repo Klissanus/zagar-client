@@ -1,4 +1,4 @@
-package zagar.view.inputforms;
+package main.java.zagar.view.inputforms;
 
 import org.jetbrains.annotations.NotNull;
 

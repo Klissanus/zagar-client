@@ -1,4 +1,4 @@
-package zagar;
+package main.java.zagar;
 
 import java.io.IOException;
 import java.net.URI;
@@ -16,18 +16,18 @@ import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
 
 import org.jetbrains.annotations.Nullable;
-import zagar.auth.AuthClient;
-import zagar.network.ServerConnectionSocket;
-import zagar.network.packets.PacketMove;
-import zagar.network.packets.PacketEjectMass;
+import main.java.zagar.auth.AuthClient;
+import main.java.zagar.network.ServerConnectionSocket;
+import main.java.zagar.network.packets.PacketMove;
+import main.java.zagar.network.packets.PacketEjectMass;
 import org.jetbrains.annotations.NotNull;
-import zagar.util.Reporter;
-import zagar.view.Cell;
-import zagar.view.GameFrame;
-import zagar.view.inputforms.HostInputForm;
-import zagar.view.inputforms.LoginPasswordInputForm;
+import main.java.zagar.util.Reporter;
+import main.java.zagar.view.Cell;
+import main.java.zagar.view.GameFrame;
+import main.java.zagar.view.inputforms.HostInputForm;
+import main.java.zagar.view.inputforms.LoginPasswordInputForm;
 
-import static zagar.GameConstants.*;
+import static main.java.zagar.GameConstants.*;
 
 public class Game {
   @NotNull

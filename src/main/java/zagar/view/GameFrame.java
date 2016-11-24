@@ -1,7 +1,7 @@
-package zagar.view;
+package main.java.zagar.view;
 
 import org.jetbrains.annotations.NotNull;
-import zagar.controller.KeyboardListener;
+import main.java.zagar.controller.KeyboardListener;
 
 import java.awt.Dimension;
 import java.awt.MouseInfo;

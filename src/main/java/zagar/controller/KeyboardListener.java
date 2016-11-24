@@ -1,13 +1,13 @@
-package zagar.controller;
+package main.java.zagar.controller;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
 
-import zagar.network.packets.PacketSplit;
-import zagar.network.packets.PacketEjectMass;
+import main.java.zagar.network.packets.PacketSplit;
+import main.java.zagar.network.packets.PacketEjectMass;
 import org.jetbrains.annotations.NotNull;
-import zagar.Game;
+import main.java.zagar.Game;
 
 public class KeyboardListener implements KeyListener {
   @Override

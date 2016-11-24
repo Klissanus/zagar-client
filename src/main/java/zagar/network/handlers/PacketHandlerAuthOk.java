@@ -1,8 +1,8 @@
-package zagar.network.handlers;
+package main.java.zagar.network.handlers;
 
 import protocol.commands.CommandThankYou;
-import zagar.Game;
-import zagar.util.JSONHelper;
+import main.java.zagar.Game;
+import main.java.zagar.util.JSONHelper;
 
 import java.io.IOException;
 

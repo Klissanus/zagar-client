@@ -1,6 +1,6 @@
-package zagar.view;
+package main.java.zagar.view;
 
-import zagar.Game;
+import main.java.zagar.Game;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

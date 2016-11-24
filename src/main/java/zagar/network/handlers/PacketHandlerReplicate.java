@@ -1,13 +1,13 @@
-package zagar.network.handlers;
+package main.java.zagar.network.handlers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import protocol.commands.CommandReplicate;
-import zagar.Game;
-import zagar.util.JSONDeserializationException;
-import zagar.util.JSONHelper;
-import zagar.view.Cell;
+import main.java.zagar.Game;
+import main.java.zagar.util.JSONDeserializationException;
+import main.java.zagar.util.JSONHelper;
+import main.java.zagar.view.Cell;
 
 import java.util.Collections;
 

@@ -1,10 +1,10 @@
-package zagar.network.handlers;
+package main.java.zagar.network.handlers;
 
 import org.jetbrains.annotations.NotNull;
 import protocol.commands.CommandLeaderBoard;
-import zagar.Game;
-import zagar.util.JSONDeserializationException;
-import zagar.util.JSONHelper;
+import main.java.zagar.Game;
+import main.java.zagar.util.JSONDeserializationException;
+import main.java.zagar.util.JSONHelper;
 
 public class PacketHandlerLeaderBoard {
   public PacketHandlerLeaderBoard(@NotNull String json) {

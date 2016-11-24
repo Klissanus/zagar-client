@@ -1,4 +1,4 @@
-package zagar;
+package main.java.zagar;
 
 public class GameThread extends Thread implements Runnable {
   public GameThread(){

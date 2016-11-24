@@ -1,4 +1,4 @@
-package zagar.network;
+package main.java.zagar.network;
 
 import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
@@ -13,13 +13,13 @@ import protocol.commands.CommandAuthFail;
 import protocol.commands.CommandAuthOk;
 import protocol.commands.CommandLeaderBoard;
 import protocol.commands.CommandReplicate;
-import zagar.Game;
-import zagar.network.handlers.PacketHandlerAuthFail;
-import zagar.network.handlers.PacketHandlerAuthOk;
-import zagar.network.handlers.PacketHandlerLeaderBoard;
-import zagar.network.handlers.PacketHandlerReplicate;
-import zagar.network.packets.PacketAuth;
-import zagar.util.JSONHelper;
+import main.java.zagar.Game;
+import main.java.zagar.network.handlers.PacketHandlerAuthFail;
+import main.java.zagar.network.handlers.PacketHandlerAuthOk;
+import main.java.zagar.network.handlers.PacketHandlerLeaderBoard;
+import main.java.zagar.network.handlers.PacketHandlerReplicate;
+import main.java.zagar.network.packets.PacketAuth;
+import main.java.zagar.util.JSONHelper;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;

@@ -1,4 +1,4 @@
-package zagar.auth;
+package main.java.zagar.auth;
 
 import okhttp3.*;
 import org.apache.logging.log4j.LogManager;

@@ -1,11 +1,11 @@
-package zagar.network.packets;
+package main.java.zagar.network.packets;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import protocol.commands.CommandEjectMass;
-import zagar.Game;
-import zagar.util.JSONHelper;
+import main.java.zagar.Game;
+import main.java.zagar.util.JSONHelper;
 
 import java.io.IOException;
 

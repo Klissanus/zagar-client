@@ -1,4 +1,4 @@
-package zagar.util;
+package main.java.zagar.util;
 
 import org.jetbrains.annotations.NotNull;
 

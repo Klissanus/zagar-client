@@ -1,7 +1,7 @@
-package zagar;
+package main.java.zagar;
 
 import org.jetbrains.annotations.NotNull;
-import zagar.view.GameFrame;
+import main.java.zagar.view.GameFrame;
 
 public class Main {
   @NotNull
