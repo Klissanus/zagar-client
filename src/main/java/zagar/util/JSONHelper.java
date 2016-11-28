@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class JSONHelper {
   @NotNull
-  private static Gson gson = new GsonBuilder().create();
+  private static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
   @NotNull
   public static String toJSON(@NotNull Object object) {
