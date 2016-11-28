@@ -13,15 +13,16 @@ public class AuthClient {
   private static final Logger log = LogManager.getLogger(AuthClient.class);
   @NotNull
   private String accountServerHost;
-  int accountServerPort;
+  private int accountServerPort;
   @NotNull
-  private String serviceUrl = "http://" + accountServerHost + ":" + accountServerPort;
+  private String serviceUrl;// = "http://" + accountServerHost + ":" + accountServerPort;
   @NotNull
   private final OkHttpClient client = new OkHttpClient();
 
   public AuthClient(@NotNull String accountServerHost,int accountServerPort) {
-    this.accountServerHost=accountServerHost;
-    this.accountServerPort=accountServerPort;
+    this.accountServerHost = accountServerHost;
+    this.accountServerPort = accountServerPort;
+    this.serviceUrl = "http://" + accountServerHost + ":" + accountServerPort;
   }
 
   public boolean register(@NotNull String user, @NotNull String password) {
