@@ -70,20 +70,24 @@ public class ServerConnectionSocket {
 
   public void handlePacket(@NotNull String msg) {
     JsonObject json = JSONHelper.getJSONObject(msg);
-    String name = json.get("command").getAsString();
-    switch (name) {
-      case CommandLeaderBoard.NAME:
-        new PacketHandlerLeaderBoard(msg);
-        break;
-      case CommandReplicate.NAME:
-        new PacketHandlerReplicate(msg);
-        break;
-      case CommandAuthFail.NAME:
-        new PacketHandlerAuthFail(msg);
-        break;
-      case CommandAuthOk.NAME:
-        new PacketHandlerAuthOk();
-        break;
+    try {
+      String name = json.get("command").getAsString();
+      switch (name) {
+        case CommandLeaderBoard.NAME:
+          new PacketHandlerLeaderBoard(msg);
+          break;
+        case CommandReplicate.NAME:
+          new PacketHandlerReplicate(msg);
+          break;
+        case CommandAuthFail.NAME:
+          new PacketHandlerAuthFail(msg);
+          break;
+        case CommandAuthOk.NAME:
+          new PacketHandlerAuthOk();
+          break;
+      }
+    }catch(Exception e){
+      log.warn("Command error in received packet: " + e);
     }
   }
 }
