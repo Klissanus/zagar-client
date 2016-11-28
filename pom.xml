@@ -20,7 +20,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>zagar.Main</mainClass>
+                            <mainClass>main.java.zagar.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
