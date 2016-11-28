@@ -56,8 +56,6 @@ public class ServerConnectionSocket {
     log.info("Connected!");
 
     new PacketAuth(Game.login, Game.serverToken).write();
-    Game.spawnPlayer = 100;
-    long oldTime = 0;
   }
 
   @OnWebSocketMessage
