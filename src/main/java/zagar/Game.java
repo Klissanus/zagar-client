@@ -104,17 +104,26 @@ public class Game {
       }
       LoginPasswordInputForm loginForm = new LoginPasswordInputForm();
       if (loginForm.showForm()) {
-        this.login = loginForm.getLogin();
+        Game.login = loginForm.getLogin();
         String password = loginForm.getPassword();
-        if (authOption == AuthOption.REGISTER) {
-          if (!authClient.register(login, password)) {
-            Reporter.reportFail("Register failed", "Register failed");
-          }
-        } else {
-          serverToken = authClient.login(Game.login, password);
-          if (serverToken == null) {
-            Reporter.reportWarn("Login failed", "Login failed");
-          }
+        switch(authOption) {
+
+          case REGISTER:
+            if (!authClient.register(login, password)) {
+              Reporter.reportFail("Register failed", "Register failed");
+            }//autologin after registration
+            serverToken = authClient.login(Game.login, password);
+            if (serverToken == null) {
+              Reporter.reportWarn("Login failed", "Login failed");
+            }
+            break;
+
+          case LOGIN:
+            serverToken = authClient.login(Game.login, password);
+            if (serverToken == null) {
+              Reporter.reportWarn("Login failed", "Login failed");
+            }
+            break;
         }
       }
     }
