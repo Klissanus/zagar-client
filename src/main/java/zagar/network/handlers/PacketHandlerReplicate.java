@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import protocol.commands.CommandReplicate;
 
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
@@ -34,7 +35,9 @@ public class PacketHandlerReplicate {
             .filter(c -> !c.isVirus())
             .map(c -> new Cell(c.getX(), c.getY(), c.getSize(), c.getCellId(), c.isVirus()))
             .collect(Collectors.toCollection(ConcurrentLinkedDeque::new));
-
+    Game.playerID = Game.player.stream()
+            .map(p -> p.id)
+            .collect(Collectors.toCollection(ArrayList::new));
     //TODO
 /*    if (b == null) return;
     b.order(ByteOrder.LITTLE_ENDIAN);

@@ -2,24 +2,16 @@ package main.java.zagar.view;
 
 import main.java.zagar.Game;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ConcurrentModificationException;
-
-import javax.swing.JPanel;
 
 public class GameCanvas extends JPanel {
   private static final long serialVersionUID = 5570080027060608254L;
+  public Font fontCells = new Font("Ubuntu", Font.BOLD, 18);
   private BufferedImage screen;
   private Font font = new Font("Ubuntu", Font.BOLD, 30);
   private Font fontLB = new Font("Ubuntu", Font.BOLD, 25);
-  public Font fontCells = new Font("Ubuntu", Font.BOLD, 18);
 
   public GameCanvas() {
     screen = new BufferedImage(GameFrame.size.width, GameFrame.size.height, BufferedImage.TYPE_INT_ARGB);
@@ -80,15 +72,14 @@ public class GameCanvas extends JPanel {
 
     g.setFont(fontCells);
 
-    for (int i2 = 0; i2 < Game.cells.length; i2++) {
-      Cell cell = Game.cells[i2];
+    Game.cells.forEach(cell -> {
       if (cell != null) {
         cell.render(g, 1);
         if (cell.mass > 9) {
           cell.render(g, Math.max(1 - 1f / (cell.mass / 10f), 0.87f));
         }
       }
-    }
+    });
 
     g.setFont(font);
 

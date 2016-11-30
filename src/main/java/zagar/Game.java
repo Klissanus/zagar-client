@@ -166,7 +166,8 @@ public class Game {
 
   public void tick() throws IOException {
     log.info("[TICK]");
-    ArrayList<Integer> toRemove = new ArrayList<>();
+    //moved to PacketHandlerReplicate
+    /*ArrayList<Integer> toRemove = new ArrayList<>();
 
     for (int i : playerID) {
       for (Cell c : Game.cells) {
@@ -182,7 +183,7 @@ public class Game {
 
     for (int i : toRemove) {
       playerID.remove(playerID.indexOf(i));
-    }
+    }*/
 
     if (socket.session != null && player.size() > 0) {
       float totalSize = 0;

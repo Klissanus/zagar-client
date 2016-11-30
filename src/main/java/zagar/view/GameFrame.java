@@ -1,28 +1,26 @@
 package main.java.zagar.view;
 
 import main.java.zagar.Game;
+import main.java.zagar.controller.KeyboardListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import main.java.zagar.controller.KeyboardListener;
 
-import java.awt.Dimension;
-import java.awt.MouseInfo;
-import java.awt.Point;
+import javax.swing.*;
+import java.awt.*;
 import java.util.Arrays;
-import javax.swing.JFrame;
 
 public class GameFrame extends JFrame {
   @NotNull
   private static final Logger log = LogManager.getLogger(GameFrame.class);
-  private static long startTime = System.currentTimeMillis();
-  private static long frames = 0;
   private static final long serialVersionUID = 3637327282806739934L;
-  @NotNull
-  public GameCanvas canvas;
   public static double mouseX, mouseY;
   @NotNull
   public static Dimension size = new Dimension(1100, 700);
+  private static long startTime = System.currentTimeMillis();
+  private static long frames = 0;
+  @NotNull
+  public GameCanvas canvas;
 
   public GameFrame() {
     setSize(size);
@@ -43,7 +41,7 @@ public class GameFrame extends JFrame {
 
   public void render() {
     log.info("[RENDER]");
-    log.info("CELLS:\n" + Arrays.toString(Game.cells));
+    log.info("CELLS:\n" + Game.cells.toString());
     log.info("PLAYER CELLS SIZE: " + Game.player.size());
     log.info("LEADERBOARD:\n" + Arrays.toString(Game.leaderBoard));
     Point mouseP = getMouseLocation();
