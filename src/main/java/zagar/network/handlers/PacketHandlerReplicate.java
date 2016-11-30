@@ -1,15 +1,17 @@
 package main.java.zagar.network.handlers;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
-import protocol.commands.CommandReplicate;
 import main.java.zagar.Game;
 import main.java.zagar.util.JSONDeserializationException;
 import main.java.zagar.util.JSONHelper;
 import main.java.zagar.view.Cell;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import protocol.commands.CommandReplicate;
 
-import java.util.Collections;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 public class PacketHandlerReplicate {
   @NotNull
@@ -23,15 +25,15 @@ public class PacketHandlerReplicate {
       e.printStackTrace();
       return;
     }
-    Cell[] gameCells = new Cell[commandReplicate.getCells().length];
-    for (int i = 0; i < commandReplicate.getCells().length; i++) {
-      protocol.model.Cell c = commandReplicate.getCells()[i];
-      gameCells[i] = new Cell(c.getX(), c.getY(), c.getSize(), c.getCellId(), c.isVirus());
-    }
 
     Game.player.clear();
-    Collections.addAll(Game.player, gameCells);
-    Game.cells = gameCells;
+    Game.cells = commandReplicate.getCells().stream()
+            .map(c -> new Cell(c.getX(), c.getY(), c.getSize(), c.getCellId(), c.isVirus()))
+            .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+    Game.player = commandReplicate.getCells().stream()
+            .filter(c -> !c.isVirus())
+            .map(c -> new Cell(c.getX(), c.getY(), c.getSize(), c.getCellId(), c.isVirus()))
+            .collect(Collectors.toCollection(ConcurrentLinkedDeque::new));
 
     //TODO
 /*    if (b == null) return;

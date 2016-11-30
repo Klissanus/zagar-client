@@ -1,31 +1,30 @@
 package main.java.zagar;
 
-import java.io.IOException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.TimeUnit;
-
-import javax.swing.JOptionPane;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
-import org.eclipse.jetty.websocket.client.WebSocketClient;
-
-import org.jetbrains.annotations.Nullable;
 import main.java.zagar.auth.AuthClient;
 import main.java.zagar.network.ServerConnectionSocket;
-import main.java.zagar.network.packets.PacketMove;
 import main.java.zagar.network.packets.PacketEjectMass;
-import org.jetbrains.annotations.NotNull;
+import main.java.zagar.network.packets.PacketMove;
 import main.java.zagar.util.Reporter;
 import main.java.zagar.view.Cell;
 import main.java.zagar.view.GameFrame;
 import main.java.zagar.view.inputforms.HostInputForm;
 import main.java.zagar.view.inputforms.LoginPasswordInputForm;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
+import org.eclipse.jetty.websocket.client.WebSocketClient;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 
 import static main.java.zagar.GameConstants.*;
 
@@ -33,7 +32,7 @@ public class Game {
   @NotNull
   private static final Logger log = LogManager.getLogger(Game.class);
   @NotNull
-  public static volatile Cell[] cells = new Cell[0];
+  public static volatile List<Cell> cells = new CopyOnWriteArrayList<>();
   @NotNull
   public static ConcurrentLinkedDeque<Cell> player = new ConcurrentLinkedDeque<>();
   @NotNull
@@ -57,12 +56,12 @@ public class Game {
   public static boolean rapidEject;
   @NotNull
   public static GameState state = GameState.NOT_AUTHORIZED;
-  private double zoomm = -1;
-  private int sortTimer;
   @NotNull
   public String gameServerUrl;
   @NotNull
   public AuthClient authClient;
+  private double zoomm = -1;
+  private int sortTimer;
 
   public Game() {
     HostInputForm gameServerUrlInput =
@@ -94,6 +93,21 @@ public class Game {
         t.printStackTrace();
       }
     }).start();
+  }
+
+  public static void sortCells() {
+    cells.sort((o1, o2) -> {
+      if (o1 == null && o2 == null) {
+        return 0;
+      }
+      if (o1 == null) {
+        return 1;
+      }
+      if (o2 == null) {
+        return -1;
+      }
+      return Float.compare(o1.size, o2.size);
+    });
   }
 
   private void authenticate() {
@@ -221,11 +235,7 @@ public class Game {
       }
     }
 
-    for (int i = 0; i < cells.length; i++) {
-      if (cells[i] != null) {
-        cells[i].tick();
-      }
-    }
+    cells.forEach(Cell::tick);
 
     sortTimer++;
 
@@ -233,21 +243,6 @@ public class Game {
       sortCells();
       sortTimer = 0;
     }
-  }
-
-  public static void sortCells() {
-    Arrays.sort(cells, (o1, o2) -> {
-      if (o1 == null && o2 == null) {
-        return 0;
-      }
-      if (o1 == null) {
-        return 1;
-      }
-      if (o2 == null) {
-        return -1;
-      }
-      return Float.compare(o1.size, o2.size);
-    });
   }
 
   private enum AuthOption {
