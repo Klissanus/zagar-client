@@ -2,6 +2,7 @@ package main.java.zagar.view;
 
 import main.java.zagar.Game;
 import main.java.zagar.controller.KeyboardListener;
+import main.java.zagar.network.packets.PacketWindowSize;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -10,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.io.IOException;
 import java.util.Arrays;
 
 public class GameFrame extends JFrame {
@@ -74,8 +76,15 @@ public class GameFrame extends JFrame {
   private class SizeChangeListener implements ComponentListener {
     @Override
     public void componentResized(ComponentEvent componentEvent) {
+      //do nothing if not authorized
+      if (Game.state != Game.GameState.AUTHORIZED) return;
       size = componentEvent.getComponent().getSize();
       canvas.setSize(size);
+      try {
+        new PacketWindowSize(size).write();
+      } catch (IOException e) {
+        log.warn("Cannot send window size, got exception {}", e);
+      }
     }
 
     @Override

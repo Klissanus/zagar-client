@@ -4,6 +4,7 @@ import main.java.zagar.auth.AuthClient;
 import main.java.zagar.network.ServerConnectionSocket;
 import main.java.zagar.network.packets.PacketEjectMass;
 import main.java.zagar.network.packets.PacketMove;
+import main.java.zagar.network.packets.PacketWindowSize;
 import main.java.zagar.util.Reporter;
 import main.java.zagar.view.Cell;
 import main.java.zagar.view.GameFrame;
@@ -136,6 +137,13 @@ public class Game {
             serverToken = authClient.login(Game.login, password);
             if (serverToken == null) {
               Reporter.reportWarn("Login failed", "Login failed");
+              break;
+            }
+            //send window size
+            try {
+              new PacketWindowSize(GameFrame.getFrameSize()).write();
+            } catch (IOException e) {
+              log.warn("Cannot send window size, got exception {}", e);
             }
             break;
         }
