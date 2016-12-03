@@ -8,6 +8,8 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.util.Arrays;
 
 public class GameFrame extends JFrame {
@@ -16,27 +18,31 @@ public class GameFrame extends JFrame {
   private static final long serialVersionUID = 3637327282806739934L;
   public static double mouseX, mouseY;
   @NotNull
-  public static Dimension size = new Dimension(1100, 700);
+  private static Dimension minSize = new Dimension(800, 600);
   private static long startTime = System.currentTimeMillis();
   private static long frames = 0;
+  @NotNull
+  private static Dimension size = minSize;
   @NotNull
   public GameCanvas canvas;
 
   public GameFrame() {
-    setSize(size);
-    setMinimumSize(size);
-    setMaximumSize(size);
-    setPreferredSize(size);
+    setSize(minSize);
+    setMinimumSize(minSize);
     addKeyListener(new KeyboardListener());
-    canvas = new GameCanvas();
+    canvas = new GameCanvas(getSize());
     getContentPane().add(canvas);
-    setResizable(false);
+    addComponentListener(new SizeChangeListener());
     setLocationRelativeTo(null);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setTitle("· zAgar ·");
-    //setCursor(getToolkit().createCustomCursor(new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "null"));
     pack();
     setVisible(true);
+  }
+
+  @NotNull
+  public static Dimension getFrameSize() {
+    return size;
   }
 
   public void render() {
@@ -63,5 +69,28 @@ public class GameFrame extends JFrame {
     int x = (MouseInfo.getPointerInfo().getLocation().x - getLocationOnScreen().x);
     int y = (MouseInfo.getPointerInfo().getLocation().y - getLocationOnScreen().y - 24);
     return new Point(x, y);
+  }
+
+  private class SizeChangeListener implements ComponentListener {
+    @Override
+    public void componentResized(ComponentEvent componentEvent) {
+      size = componentEvent.getComponent().getSize();
+      canvas.setSize(size);
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent componentEvent) {
+
+    }
+
+    @Override
+    public void componentShown(ComponentEvent componentEvent) {
+
+    }
+
+    @Override
+    public void componentHidden(ComponentEvent componentEvent) {
+
+    }
   }
 }

@@ -1,9 +1,12 @@
 package main.java.zagar.view;
 
 import main.java.zagar.Game;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 
 public class GameCanvas extends JPanel {
@@ -13,11 +16,12 @@ public class GameCanvas extends JPanel {
   private Font font = new Font("Ubuntu", Font.BOLD, 30);
   private Font fontLB = new Font("Ubuntu", Font.BOLD, 25);
 
-  public GameCanvas() {
-    screen = new BufferedImage(GameFrame.size.width, GameFrame.size.height, BufferedImage.TYPE_INT_ARGB);
+  public GameCanvas(@NotNull Dimension size) {
+    setSize(size);
+    screen = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
     setFont(font);
-    setSize(GameFrame.size);
     setVisible(true);
+    addComponentListener(new SizeChangeListener());
   }
 
   @Override
@@ -30,7 +34,7 @@ public class GameCanvas extends JPanel {
     Graphics ggg = screen.getGraphics();
     Graphics2D g = ((Graphics2D) ggg);
     g.setColor(new Color(255, 255, 255));
-    g.fillRect(0, 0, GameFrame.size.width, GameFrame.size.height);
+    g.fillRect(0, 0, getWidth(), getHeight());
 
     g.setColor(new Color(220, 220, 220));
 
@@ -58,14 +62,14 @@ public class GameCanvas extends JPanel {
 
       g.setStroke(new BasicStroke(2));
 
-      for (double i = avgX - (GameFrame.size.width / 2) / Game.zoom; i < avgX + (GameFrame.size.width / 2) / Game.zoom; i += 100) {
+      for (double i = avgX - (getWidth() / 2) / Game.zoom; i < avgX + (getWidth() / 2) / Game.zoom; i += 100) {
         i = (int) (i / 100) * 100;
-        int x = (int) ((i - avgX) * Game.zoom) + GameFrame.size.width / 2 - size / 2;
+        int x = (int) ((i - avgX) * Game.zoom) + getWidth() / 2 - size / 2;
         g.drawLine((int) x, (int) Game.minSizeY, (int) x, (int) Game.maxSizeY);
       }
-      for (double i = avgY - (GameFrame.size.height / 2) / Game.zoom; i < avgY + (GameFrame.size.height / 2) / Game.zoom; i += 100) {
+      for (double i = avgY - (getHeight() / 2) / Game.zoom; i < avgY + (getHeight() / 2) / Game.zoom; i += 100) {
         i = (int) (i / 100) * 100;
-        int y = (int) ((i - avgY) * Game.zoom) + GameFrame.size.height / 2 - size / 2;
+        int y = (int) ((i - avgY) * Game.zoom) + getHeight() / 2 - size / 2;
         g.drawLine((int) Game.minSizeX, (int) y, (int) Game.maxSizeX, (int) y);
       }
     }
@@ -87,24 +91,24 @@ public class GameCanvas extends JPanel {
 
     g.setColor(new Color(0, 0, 0, 0.5f));
 
-    g.fillRect(GameFrame.size.width - 202, 10, 184, 265);
-    g.fillRect(7, GameFrame.size.height - 85, getStringWidth(g, scoreString) + 26, 47);
+    g.fillRect(getWidth() - 202, 10, 184, 265);
+    g.fillRect(7, getHeight() - 85, getStringWidth(g, scoreString) + 26, 47);
 
     g.setColor(Color.WHITE);
 
-    g.drawString(scoreString, 20, GameFrame.size.height - 50);
+    g.drawString(scoreString, 20, getHeight() - 50);
 
     int i = 0;
 
     g.setFont(fontLB);
 
-    g.drawString("Leaderboard", GameFrame.size.width - 110 - getStringWidth(g, "Leaderboard") / 2, 40);
+    g.drawString("Leaderboard", getWidth() - 110 - getStringWidth(g, "Leaderboard") / 2, 40);
 
     g.setFont(fontCells);
 
     for (String s : Game.leaderBoard) {
       if (s != null) {
-        g.drawString(s, GameFrame.size.width - 110 - getStringWidth(g, s) / 2, 40 + 22 * (i + 1));
+        g.drawString(s, getWidth() - 110 - getStringWidth(g, s) / 2, 40 + 22 * (i + 1));
       }
       i++;
     }
@@ -121,5 +125,30 @@ public class GameCanvas extends JPanel {
     FontMetrics fm = img.getGraphics().getFontMetrics(g.getFont());
 
     return fm.stringWidth(string);
+  }
+
+  private class SizeChangeListener implements ComponentListener {
+    @Override
+    public void componentResized(ComponentEvent componentEvent) {
+      screen = new BufferedImage(componentEvent.getComponent().getWidth(),
+              componentEvent.getComponent().getHeight(),
+              BufferedImage.TYPE_INT_ARGB);
+      render();
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent componentEvent) {
+
+    }
+
+    @Override
+    public void componentShown(ComponentEvent componentEvent) {
+
+    }
+
+    @Override
+    public void componentHidden(ComponentEvent componentEvent) {
+
+    }
   }
 }

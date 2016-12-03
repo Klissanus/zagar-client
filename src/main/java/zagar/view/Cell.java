@@ -1,29 +1,24 @@
 package main.java.zagar.view;
 
-import org.jetbrains.annotations.NotNull;
 import main.java.zagar.Game;
 import main.java.zagar.Main;
+import org.jetbrains.annotations.NotNull;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.Polygon;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ConcurrentModificationException;
 
 public class Cell {
+  private final boolean virus;
   public double x, y;
   public int id;
   public float size;
-  private int r, g, b;
   @NotNull
   public String name = "";
   public float sizeRender;
   public double xRender;
   public double yRender;
   public int mass;
-  private final boolean virus;
+  private int r, g, b;
   private float rotation = 0;
 
   public Cell(double x, double y, float size, int id, boolean isVirus) {
@@ -71,10 +66,11 @@ public class Cell {
       avgX /= Game.player.size();
       avgY /= Game.player.size();
 
-      int x = (int) ((this.xRender - avgX) * Game.zoom) + GameFrame.size.width / 2 - size / 2;
-      int y = (int) ((this.yRender - avgY) * Game.zoom) + GameFrame.size.height / 2 - size / 2;
+      int x = (int) ((this.xRender - avgX) * Game.zoom) + (int) GameFrame.getFrameSize().getWidth() / 2 - size / 2;
+      int y = (int) ((this.yRender - avgY) * Game.zoom) + (int) GameFrame.getFrameSize().getHeight() / 2 - size / 2;
 
-      if (x < -size - 30 || x > GameFrame.size.width + 30 || y < -size - 30 || y > GameFrame.size.height + 30) {
+      if (x < -size - 30 || x > GameFrame.getFrameSize().getWidth() + 30 ||
+              y < -size - 30 || y > GameFrame.getFrameSize().getHeight() + 30) {
         return;
       }
 
