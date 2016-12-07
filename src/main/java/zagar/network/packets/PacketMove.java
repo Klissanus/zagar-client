@@ -1,11 +1,11 @@
 package main.java.zagar.network.packets;
 
+import main.java.zagar.util.JSONHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 import org.jetbrains.annotations.NotNull;
 import protocol.commands.CommandMove;
-import main.java.zagar.util.JSONHelper;
 
 import java.io.IOException;
 
@@ -13,8 +13,8 @@ public class PacketMove {
   @NotNull
   private static final Logger log = LogManager.getLogger(">>>");
 
-  public float x;
-  public float y;
+    private float x;
+    private float y;
 
   public PacketMove(float x, float y) {
     this.x = x;
