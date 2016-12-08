@@ -14,11 +14,11 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
-public class PacketHandlerReplicate {
+public class PacketHandlerReplicate implements PacketHandler {
   @NotNull
   private static final Logger log = LogManager.getLogger(PacketHandlerReplicate.class);
 
-  public PacketHandlerReplicate(@NotNull String json) {
+  public void handle(@NotNull String json) {
     CommandReplicate commandReplicate;
     try {
       commandReplicate = JSONHelper.fromJSON(json, CommandReplicate.class);

@@ -1,6 +1,10 @@
 package main.java.zagar.network;
 
 import com.google.gson.JsonObject;
+import main.java.zagar.Game;
+import main.java.zagar.network.handlers.*;
+import main.java.zagar.network.packets.PacketAuth;
+import main.java.zagar.util.JSONHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
@@ -13,27 +17,32 @@ import protocol.commands.CommandAuthFail;
 import protocol.commands.CommandAuthOk;
 import protocol.commands.CommandLeaderBoard;
 import protocol.commands.CommandReplicate;
-import main.java.zagar.Game;
-import main.java.zagar.network.handlers.PacketHandlerAuthFail;
-import main.java.zagar.network.handlers.PacketHandlerAuthOk;
-import main.java.zagar.network.handlers.PacketHandlerLeaderBoard;
-import main.java.zagar.network.handlers.PacketHandlerReplicate;
-import main.java.zagar.network.packets.PacketAuth;
-import main.java.zagar.util.JSONHelper;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 @WebSocket(maxTextMessageSize = 1024)
 public class ServerConnectionSocket {
   @NotNull
-  private static final Logger log = LogManager.getLogger("<<<");
+  private static final Logger log = LogManager.getLogger(ServerConnectionSocket.class);
+    @NotNull
+    private static final Map<String, PacketHandler> handleMap = new HashMap<>();
+
+    static {
+        handleMap.put(CommandLeaderBoard.NAME, new PacketHandlerLeaderBoard());
+        handleMap.put(CommandReplicate.NAME, new PacketHandlerReplicate());
+        handleMap.put(CommandAuthFail.NAME, new PacketHandlerAuthFail());
+        handleMap.put(CommandAuthOk.NAME, new PacketHandlerAuthOk());
+    }
 
   @NotNull
   private final CountDownLatch closeLatch;
   @NotNull
   public Session session;
+
 
   public ServerConnectionSocket() {
     this.closeLatch = new CountDownLatch(1);
@@ -66,24 +75,11 @@ public class ServerConnectionSocket {
     }
   }
 
-  public void handlePacket(@NotNull String msg) {
+    private void handlePacket(@NotNull String msg) {
     JsonObject json = JSONHelper.getJSONObject(msg);
     try {
       String name = json.get("command").getAsString();
-      switch (name) {
-        case CommandLeaderBoard.NAME:
-          new PacketHandlerLeaderBoard(msg);
-          break;
-        case CommandReplicate.NAME:
-          new PacketHandlerReplicate(msg);
-          break;
-        case CommandAuthFail.NAME:
-          new PacketHandlerAuthFail(msg);
-          break;
-        case CommandAuthOk.NAME:
-          new PacketHandlerAuthOk();
-          break;
-      }
+        handleMap.get(name).handle(msg);
     }catch(Exception e){
       log.warn("Command error in received packet: " + e);
     }
