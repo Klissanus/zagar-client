@@ -207,15 +207,15 @@ public class Game {
       zoom += (zoomm - zoom) / 40f;
 
       if (socket.session.isOpen()) {
-        //check if pointer inside window
+        //check if pointer inside window and window in focus
         Point mousePos = MouseInfo.getPointerInfo().getLocation();
         Rectangle bounds = Main.getFrame().getBounds();
         bounds.setLocation(Main.getFrame().getLocationOnScreen());
-        if (!bounds.contains(mousePos)) return;
+        if (!bounds.contains(mousePos) || Main.getFrame().isFocused()) return;
 
         //normalize to half size of window
-        float dx = (float) (mousePos.getX() - bounds.getCenterX()) / (Main.getFrame().getSize().height * zoom) * 2;
-        float dy = (float) (mousePos.getY() - bounds.getCenterY()) / (Main.getFrame().getSize().height * zoom) * 2;
+        float dx = (float) (mousePos.getX() - bounds.getCenterX()) / (Main.getFrame().getSize().height * zoom);
+        float dy = (float) (mousePos.getY() - bounds.getCenterY()) / (Main.getFrame().getSize().height * zoom);
 
         new PacketMove(dx, dy).write(socket.session);
 
