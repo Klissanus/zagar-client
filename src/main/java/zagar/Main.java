@@ -1,19 +1,16 @@
 package main.java.zagar;
 
-import org.jetbrains.annotations.NotNull;
 import main.java.zagar.view.GameFrame;
+import org.jetbrains.annotations.NotNull;
 
 public class Main {
   @NotNull
-  public static GameFrame frame;
+  private static GameFrame frame = new GameFrame();
   @NotNull
-  private static Game game;
+  private static Game game = new Game();
 
   public static void main(@NotNull String[] args) {
     GameThread thread = new GameThread();
-    frame = new GameFrame();
-    game = new Game();
-
     thread.start();
     try {
       thread.join();
@@ -22,7 +19,12 @@ public class Main {
     }
   }
 
-  public static synchronized void updateGame() {
+  @NotNull
+  public static GameFrame getFrame() {
+    return frame;
+  }
+
+  static synchronized void updateGame() {
     try {
         game.tick();
         frame.render();

@@ -52,6 +52,7 @@ public class Cell {
       }
       g.setColor(color);
       int size = (int) ((this.sizeRender * 2f * scale) * Game.zoom);
+      GameFrame frame = Main.getFrame();
 
       float avgX = 0;
       float avgY = 0;
@@ -66,11 +67,11 @@ public class Cell {
       avgX /= Game.player.size();
       avgY /= Game.player.size();
 
-      int x = (int) ((this.xRender - avgX) * Game.zoom) + (int) GameFrame.getFrameSize().getWidth() / 2 - size / 2;
-      int y = (int) ((this.yRender - avgY) * Game.zoom) + (int) GameFrame.getFrameSize().getHeight() / 2 - size / 2;
+      int x = (int) ((this.xRender - avgX) * Game.zoom) + frame.getSize().width / 2 - size / 2;
+      int y = (int) ((this.yRender - avgY) * Game.zoom) + frame.getSize().height / 2 - size / 2;
 
-      if (x < -size - 30 || x > GameFrame.getFrameSize().getWidth() + 30 ||
-              y < -size - 30 || y > GameFrame.getFrameSize().getHeight() + 30) {
+      if (x < -size - 30 || x > frame.getWidth() + 30 ||
+              y < -size - 30 || y > frame.getHeight() + 30) {
         return;
       }
 
@@ -102,7 +103,7 @@ public class Cell {
       }
 
       if (this.name.length() > 0 || (this.mass > 30 && !this.virus)) {
-        Font font = Main.frame.canvas.fontCells;
+        Font font = frame.getCanvas().fontCells;
         BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         FontMetrics fm = img.getGraphics().getFontMetrics(font);
 

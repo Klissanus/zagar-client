@@ -18,15 +18,12 @@ public class GameFrame extends JFrame {
   @NotNull
   private static final Logger log = LogManager.getLogger(GameFrame.class);
   private static final long serialVersionUID = 3637327282806739934L;
-  public static double mouseX, mouseY;
   @NotNull
   private static Dimension minSize = new Dimension(800, 600);
   private static long startTime = System.currentTimeMillis();
   private static long frames = 0;
   @NotNull
-  private static Dimension size = minSize;
-  @NotNull
-  public GameCanvas canvas;
+  private GameCanvas canvas;
 
   public GameFrame() {
     setSize(minSize);
@@ -42,19 +39,11 @@ public class GameFrame extends JFrame {
     setVisible(true);
   }
 
-  @NotNull
-  public static Dimension getFrameSize() {
-    return size;
-  }
-
   public void render() {
     log.info("[RENDER]");
     log.info("CELLS:\n" + Game.cells.toString());
     log.info("PLAYER CELLS SIZE: " + Game.player.size());
     log.info("LEADERBOARD:\n" + Arrays.toString(Game.leaderBoard));
-    Point mouseP = getMouseLocation();
-    mouseX = mouseP.getX();
-    mouseY = mouseP.getY();
     frames++;
     if (System.currentTimeMillis() - startTime > 1000) {
       if (frames < 10) {
@@ -67,10 +56,8 @@ public class GameFrame extends JFrame {
   }
 
   @NotNull
-  private Point getMouseLocation() {
-    int x = (MouseInfo.getPointerInfo().getLocation().x - getLocationOnScreen().x);
-    int y = (MouseInfo.getPointerInfo().getLocation().y - getLocationOnScreen().y - 24);
-    return new Point(x, y);
+  public GameCanvas getCanvas() {
+    return canvas;
   }
 
   private class SizeChangeListener implements ComponentListener {
@@ -78,7 +65,7 @@ public class GameFrame extends JFrame {
     public void componentResized(ComponentEvent componentEvent) {
       //do nothing if not authorized
       if (Game.state != Game.GameState.AUTHORIZED) return;
-      size = componentEvent.getComponent().getSize();
+      Dimension size = componentEvent.getComponent().getSize();
       canvas.setSize(size);
       try {
         new PacketWindowSize(size).write();

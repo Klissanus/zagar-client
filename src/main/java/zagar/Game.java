@@ -4,10 +4,8 @@ import main.java.zagar.auth.AuthClient;
 import main.java.zagar.network.ServerConnectionSocket;
 import main.java.zagar.network.packets.PacketEjectMass;
 import main.java.zagar.network.packets.PacketMove;
-import main.java.zagar.network.packets.PacketWindowSize;
 import main.java.zagar.util.Reporter;
 import main.java.zagar.view.Cell;
-import main.java.zagar.view.GameFrame;
 import main.java.zagar.view.inputforms.HostInputForm;
 import main.java.zagar.view.inputforms.LoginPasswordInputForm;
 import org.apache.logging.log4j.LogManager;
@@ -18,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -41,9 +40,7 @@ public class Game {
   public static double maxSizeX, maxSizeY, minSizeX, minSizeY;
   @NotNull
   public static ArrayList<Integer> playerID = new ArrayList<>();
-  public static float followX;
-  public static float followY;
-  public static double zoom;
+  public static float zoom;
   public static int score;
   @NotNull
   public static ServerConnectionSocket socket;
@@ -139,13 +136,6 @@ public class Game {
               Reporter.reportWarn("Login failed", "Login failed");
               break;
             }
-            //send window size
-            try {
-              new PacketWindowSize(GameFrame.getFrameSize()).write();
-            } catch (IOException e) {
-              log.warn("Cannot send window size, got exception {}", e);
-            }
-            break;
         }
       }
     }
@@ -205,7 +195,7 @@ public class Game {
         score = newScore;
       }
 
-      zoomm = GameFrame.getFrameSize().getHeight() / (1024 / Math.pow(Math.min(64.0 / totalSize, 1), 0.4));
+      zoomm = Main.getFrame().getSize().getHeight() / (1024 / Math.pow(Math.min(64.0 / totalSize, 1), 0.4));
 
       if (zoomm > 1) {
         zoomm = 1;
@@ -217,27 +207,17 @@ public class Game {
       zoom += (zoomm - zoom) / 40f;
 
       if (socket.session.isOpen()) {
-        float avgX = 0;
-        float avgY = 0;
-        totalSize = 0;
+        //check if pointer inside window
+        Point mousePos = MouseInfo.getPointerInfo().getLocation();
+        Rectangle bounds = Main.getFrame().getBounds();
+        bounds.setLocation(Main.getFrame().getLocationOnScreen());
+        if (!bounds.contains(mousePos)) return;
 
-        for (Cell c : Game.player) {
-          avgX += c.x;
-          avgY += c.y;
-          totalSize += c.size;
-        }
+        //normalize to half size of window
+        float dx = (float) (mousePos.getX() - bounds.getCenterX()) / (Main.getFrame().getSize().height * zoom) * 2;
+        float dy = (float) (mousePos.getY() - bounds.getCenterY()) / (Main.getFrame().getSize().height * zoom) * 2;
 
-        avgX /= Game.player.size();
-        avgY /= Game.player.size();
-
-        float x = avgX;
-        float y = avgY;
-        x += (float) ((GameFrame.mouseX - GameFrame.getFrameSize().getWidth() / 2) / zoom);
-        y += (float) ((GameFrame.mouseY - GameFrame.getFrameSize().getHeight() / 2) / zoom);
-        followX = x;
-        followY = y;
-          new PacketMove(x / GameFrame.getFrameSize().width * 2, y / GameFrame.getFrameSize().height * 2)
-                  .write(socket.session);
+        new PacketMove(dx, dy).write(socket.session);
 
         if (rapidEject) {
           new PacketEjectMass().write();

@@ -1,9 +1,9 @@
 package main.java.zagar.network.handlers;
 
 import main.java.zagar.Game;
+import main.java.zagar.Main;
 import main.java.zagar.network.packets.PacketWindowSize;
 import main.java.zagar.util.JSONHelper;
-import main.java.zagar.view.GameFrame;
 import org.jetbrains.annotations.NotNull;
 import protocol.commands.CommandThankYou;
 
@@ -16,7 +16,7 @@ public class PacketHandlerAuthOk implements PacketHandler {
       String json = JSONHelper.toJSON(new CommandThankYou(Game.login));
       Game.socket.session.getRemote().sendString(json);
       //send window size
-      new PacketWindowSize(GameFrame.getFrameSize()).write();
+        new PacketWindowSize(Main.getFrame().getSize()).write();
     } catch (IOException e) {
       e.printStackTrace();
     }

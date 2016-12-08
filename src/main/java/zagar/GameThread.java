@@ -1,17 +1,17 @@
 package main.java.zagar;
 
-public class GameThread extends Thread implements Runnable {
-  public GameThread(){
+class GameThread extends Thread implements Runnable {
+  GameThread() {
     super("game");
   }
   @Override
   public void run() {
-    while (true) {
+    while (!Thread.interrupted()) {
       long preTickTime = System.currentTimeMillis();
       Main.updateGame();
       if (System.currentTimeMillis() % 100 == 0) {
         Game.fps = 1000 / (System.currentTimeMillis() - preTickTime);
-        Main.frame.setTitle("· zAgar · " + Game.fps + "fps");
+        Main.getFrame().setTitle("· zAgar · " + Game.fps + "fps");
       }
     }
   }
