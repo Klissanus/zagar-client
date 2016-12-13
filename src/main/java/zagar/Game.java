@@ -211,7 +211,7 @@ public class Game {
         Point mousePos = MouseInfo.getPointerInfo().getLocation();
         Rectangle bounds = Main.getFrame().getBounds();
         bounds.setLocation(Main.getFrame().getLocationOnScreen());
-        if (!bounds.contains(mousePos) || Main.getFrame().isFocused()) return;
+        if (!bounds.contains(mousePos) || !Main.getFrame().isFocused()) return;
 
         //normalize to half size of window
         float dx = (float) (mousePos.getX() - bounds.getCenterX()) / (Main.getFrame().getSize().height * zoom);
