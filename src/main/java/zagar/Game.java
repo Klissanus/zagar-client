@@ -32,7 +32,11 @@ public class Game {
   @NotNull
   private static final Logger log = LogManager.getLogger(Game.class);
   @NotNull
+  public static volatile List<Cell> bufCells = new CopyOnWriteArrayList<>();
+  @NotNull
   public static volatile List<Cell> cells = new CopyOnWriteArrayList<>();
+  @NotNull
+  public static ConcurrentLinkedDeque<Cell> bufPlayer = new ConcurrentLinkedDeque<>();
   @NotNull
   public static ConcurrentLinkedDeque<Cell> player = new ConcurrentLinkedDeque<>();
   @NotNull
@@ -164,6 +168,9 @@ public class Game {
 
   public void tick() throws IOException {
     log.info("[TICK]");
+    //copy received replic from buffer
+    cells = CopyOnWriteArrayList<>(bufCells);
+    player = ConcurrentLinkedDeque<>(bufPlayer);
     //moved to PacketHandlerReplicate
     /*ArrayList<Integer> toRemove = new ArrayList<>();
 
