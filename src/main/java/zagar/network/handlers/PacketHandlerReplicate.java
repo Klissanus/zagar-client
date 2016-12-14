@@ -27,10 +27,10 @@ public class PacketHandlerReplicate implements PacketHandler {
       return;
     }
 
-    Game.bufCells = commandReplicate.getCells().stream()
+    Game.cells = commandReplicate.getCells().stream()
             .map(c -> new Cell(c.getX(), c.getY(), c.getSize(), c.getCellId(), c.isVirus()))
             .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
-    Game.bufPlayer = commandReplicate.getCells().stream()
+    Game.player = commandReplicate.getCells().stream()
             .filter(c -> !c.isVirus())
             .map(c -> new Cell(c.getX(), c.getY(), c.getSize(), c.getCellId(), c.isVirus()))
             .collect(Collectors.toCollection(ConcurrentLinkedDeque::new));
