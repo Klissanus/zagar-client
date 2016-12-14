@@ -44,21 +44,21 @@ public class GameCanvas extends JPanel {
       g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
 
-    if (Game.player.size() > 0) {
+      if (Game.getPlayers().size() > 0) {
       int size = 1;
 
       float avgX = 0;
       float avgY = 0;
 
-      for (Cell c : Game.player) {
+          for (Cell c : Game.getPlayers()) {
         if (c != null) {
           avgX += c.xRender;
           avgY += c.yRender;
         }
       }
 
-      avgX /= Game.player.size();
-      avgY /= Game.player.size();
+          avgX /= Game.getPlayers().size();
+          avgY /= Game.getPlayers().size();
 
       g.setStroke(new BasicStroke(2));
 
@@ -76,7 +76,7 @@ public class GameCanvas extends JPanel {
 
     g.setFont(fontCells);
 
-    Game.cells.forEach(cell -> {
+      Game.getCells().forEach(cell -> {
       if (cell != null) {
         cell.render(g, 1);
         if (cell.mass > 9) {

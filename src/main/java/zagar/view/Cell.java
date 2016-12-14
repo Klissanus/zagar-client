@@ -52,21 +52,21 @@ public class Cell {
     void render(@NotNull Graphics2D g, float scale) {
       GameFrame frame = Main.getFrame();
         g.setColor(color);
-        if (Game.player.size() > 0) {
+        if (Game.getPlayers().size() > 0) {
             int size = (int) ((this.sizeRender * 2f * scale) * Game.zoom);
 
             float avgX = 0;
             float avgY = 0;
 
-            for (Cell c : Game.player) {
+            for (Cell c : Game.getPlayers()) {
                 if (c != null) {
                     avgX += c.xRender;
                     avgY += c.yRender;
                 }
             }
 
-            avgX /= Game.player.size();
-            avgY /= Game.player.size();
+            avgX /= Game.getPlayers().size();
+            avgY /= Game.getPlayers().size();
 
             int x = (int) ((this.xRender - avgX) * Game.zoom) + frame.getSize().width / 2 - size / 2;
             int y = (int) ((this.yRender - avgY) * Game.zoom) + frame.getSize().height / 2 - size / 2;

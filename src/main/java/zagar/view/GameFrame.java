@@ -41,8 +41,8 @@ public class GameFrame extends JFrame {
 
   public void render() {
     log.info("[RENDER]");
-    log.info("CELLS:\n" + Game.cells.toString());
-    log.info("PLAYER CELLS SIZE: " + Game.player.size());
+      log.info("CELLS:\n" + Game.getCells().toString());
+      log.info("PLAYER CELLS SIZE: " + Game.getPlayers().size());
     log.info("LEADERBOARD:\n" + Arrays.toString(Game.leaderBoard));
     frames++;
     if (System.currentTimeMillis() - startTime > 1000) {

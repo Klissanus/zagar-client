@@ -31,11 +31,7 @@ import static main.java.zagar.GameConstants.*;
 public class Game {
   @NotNull
   private static final Logger log = LogManager.getLogger(Game.class);
-  @NotNull
-  public static volatile List<Cell> cells = new CopyOnWriteArrayList<>();
-  @NotNull
-  public static ConcurrentLinkedDeque<Cell> player = new ConcurrentLinkedDeque<>();
-  @NotNull
+    @NotNull
   public static String[] leaderBoard = new String[10];
   public static double maxSizeX, maxSizeY, minSizeX, minSizeY;
   @NotNull
@@ -55,6 +51,14 @@ public class Game {
   @NotNull
   public static GameState state = GameState.NOT_AUTHORIZED;
   @NotNull
+  private static List<Cell> cells = new CopyOnWriteArrayList<>();
+    @NotNull
+    private static ConcurrentLinkedDeque<Cell> player = new ConcurrentLinkedDeque<>();
+    @NotNull
+    private static List<Cell> bufCells = new CopyOnWriteArrayList<>();
+    @NotNull
+    private static ConcurrentLinkedDeque<Cell> bufPlayer = new ConcurrentLinkedDeque<>();
+    @NotNull
   public String gameServerUrl;
   @NotNull
   public AuthClient authClient;
@@ -107,6 +111,22 @@ public class Game {
       return Float.compare(o1.size, o2.size);
     });
   }
+
+    public static void updateBuffer(@NotNull List<Cell> cells,
+                                    @NotNull ConcurrentLinkedDeque<Cell> player) {
+        bufCells = cells;
+        bufPlayer = player;
+    }
+
+    @NotNull
+    public static ConcurrentLinkedDeque<Cell> getPlayers() {
+        return player;
+    }
+
+    @NotNull
+    public static List<Cell> getCells() {
+        return cells;
+    }
 
   private void authenticate() {
     while (serverToken == null) {
@@ -164,6 +184,9 @@ public class Game {
 
   public void tick() throws IOException {
     log.info("[TICK]");
+      //read from buffer
+      cells = new CopyOnWriteArrayList<>(bufCells);
+      player = new ConcurrentLinkedDeque<>(bufPlayer);
     //moved to PacketHandlerReplicate
     /*ArrayList<Integer> toRemove = new ArrayList<>();
 
@@ -234,7 +257,6 @@ public class Game {
       sortTimer = 0;
     }
   }
-
   private enum AuthOption {
     REGISTER, LOGIN
   }
