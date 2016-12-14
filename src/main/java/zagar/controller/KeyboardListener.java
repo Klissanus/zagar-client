@@ -28,7 +28,8 @@ public class KeyboardListener implements KeyListener {
   public void keyPressed(@NotNull KeyEvent e) {
       if (Game.socket != null && Game.socket.session != null) {
           if (Game.socket.session.isOpen()) {
-              KeyEventMap.get(e.getKeyCode()).handle();
+              if (KeyEventMap.containsKey(e.getKeyCode()))
+                KeyEventMap.get(e.getKeyCode()).handle();
           }
       }
   }
