@@ -24,11 +24,14 @@ public class LoginPasswordInputForm {
         panel.add(Box.createHorizontalStrut(15));
         panel.add(new JLabel("Password:"));
         panel.add(passwordField);
+        loginField.setText("test1");
+        passwordField.setText("test1");
     }
 
     public boolean showForm() {
         int result = JOptionPane.showConfirmDialog(null,panel,
                 "Please enter login and password",JOptionPane.OK_CANCEL_OPTION);
+
         login = loginField.getText();
         password = passwordField.getText();
         return result==JOptionPane.OK_OPTION;

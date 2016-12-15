@@ -28,12 +28,16 @@ public class PacketHandlerReplicate implements PacketHandler {
     }
 
       List<Cell> cells = commandReplicate.getCells().stream()
-            .map(c -> new Cell(c.getX(), c.getY(), c.getSize(), c.getCellId(), c.isVirus()))
+            .map(c -> new Cell(c.getX(), c.getY(), c.getSize(), c.getCellId(), c.isVirus(),false))
             .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
       ConcurrentLinkedDeque<Cell> players = commandReplicate.getCells().stream()
             .filter(c -> !c.isVirus())
-            .map(c -> new Cell(c.getX(), c.getY(), c.getSize(), c.getCellId(), c.isVirus()))
+            .map(c -> new Cell(c.getX(), c.getY(), c.getSize(), c.getCellId(), c.isVirus(),false))
             .collect(Collectors.toCollection(ConcurrentLinkedDeque::new));
+    List <Cell> food = commandReplicate.getFood().stream()
+            .map(c -> new Cell(c.getX(), c.getY(), 10, 0, false, false))
+            .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+    food.forEach(e->cells.add(e));
       Game.updateBuffer(cells, players);
 
     //TODO
