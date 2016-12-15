@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-@WebSocket(maxTextMessageSize = 1024)
+@WebSocket(maxTextMessageSize = 100000)
 public class ServerConnectionSocket {
   @NotNull
   private static final Logger log = LogManager.getLogger(ServerConnectionSocket.class);
