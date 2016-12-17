@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
 public class Cell {
     private final boolean virus;
@@ -35,8 +36,10 @@ public class Cell {
         this.sizeRender = this.size;
         if (isVirus) {
             color = Color.GREEN;
+        } else if (isFood) {
+            color = generateColor(); //TODO: randomly choose from list
         } else {
-            color = Color.BLACK; //TODO: randomly choose from list
+            color = generateColor();
         }
     }
 
@@ -49,6 +52,14 @@ public class Cell {
         if (Game.cellNames.containsKey(this.id)) {
             this.name = Game.cellNames.get(this.id);
         }
+    }
+
+    public Color generateColor() {
+        Random rand = new Random();
+        float r = rand.nextFloat();
+        float g = rand.nextFloat();
+        float b = rand.nextFloat();
+        return new Color(r, g, b);
     }
 
     void render(@NotNull Graphics2D g, float scale) {
@@ -72,14 +83,24 @@ public class Cell {
 
             int x = (int) ((this.xRender - avgX) * Game.zoom) + frame.getSize().width / 2 - size / 2;
             int y = (int) ((this.yRender - avgY) * Game.zoom) + frame.getSize().height / 2 - size / 2;
-
+            if (!this.virus && !this.food) {
+                x = (int) ((this.xRender - avgX / 2) * Game.zoom) + frame.getSize().width / 2 - size / 2;
+                y = (int) ((this.yRender - avgY / 2) * Game.zoom) + frame.getSize().height / 2 - size / 2;
+            }
             if (x < -size - 30 || x > frame.getWidth() + 30 ||
                     y < -size - 30 || y > frame.getHeight() + 30) {
-                return;
+               return;
             }
-
             Ellipse2D figure = new Ellipse2D.Double(x, y, size, size);
+            Polygon polygon = new Polygon();
+            if (!this.food)
             g.fill(figure);
+            else{
+                for (int i = 0; i < 6; i++)
+                    polygon.addPoint((int) (x + 10 * Math.cos(i * 2 * Math.PI / 6)),
+                            (int) (y + 10 * Math.sin(i * 2 * Math.PI / 6)));
+                g.fill(polygon);
+            }
         }
 
         if (this.name.length() > 0 || (this.mass > 30 && !this.virus)) {

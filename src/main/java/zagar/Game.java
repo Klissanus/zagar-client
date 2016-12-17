@@ -19,6 +19,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -187,6 +188,7 @@ public class Game {
       //read from buffer
       cells = new CopyOnWriteArrayList<>(bufCells);
       player = new ConcurrentLinkedDeque<>(bufPlayer);
+
     //moved to PacketHandlerReplicate
     /*ArrayList<Integer> toRemove = new ArrayList<>();
 
@@ -256,6 +258,7 @@ public class Game {
       sortCells();
       sortTimer = 0;
     }
+    socket.session.getRemote().sendPing(ByteBuffer.allocate(48));
   }
   private enum AuthOption {
     REGISTER, LOGIN

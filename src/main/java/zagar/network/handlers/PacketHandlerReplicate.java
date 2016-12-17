@@ -35,7 +35,7 @@ public class PacketHandlerReplicate implements PacketHandler {
             .map(c -> new Cell(c.getX(), c.getY(), c.getSize(), c.getCellId(), c.isVirus(),false))
             .collect(Collectors.toCollection(ConcurrentLinkedDeque::new));
     List <Cell> food = commandReplicate.getFood().stream()
-            .map(c -> new Cell(c.getX(), c.getY(), 10, 0, false, false))
+            .map(c -> new Cell(c.getX(), c.getY(), 10, 0, false, true))
             .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
     food.forEach(e->cells.add(e));
       Game.updateBuffer(cells, players);
