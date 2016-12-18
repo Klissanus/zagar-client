@@ -12,11 +12,11 @@ import java.util.Random;
 public class Cell {
     private final boolean virus;
     private final boolean food;
-    public int id;
-    public float size;
-    double xRender;
-    double yRender;
-    int mass;
+    private int id;
+    private float size;
+    private double xRender;
+    private double yRender;
+    private int mass;
     private double x, y;
     @NotNull
     private String name = "";
@@ -41,6 +41,31 @@ public class Cell {
         } else {
             color = generateColor();
         }
+    }
+
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public double getxRender() {
+        return xRender;
+    }
+
+    public double getyRender() {
+        return yRender;
+    }
+
+    public int getMass() {
+        return mass;
+    }
+
+    public float getSize() {
+        return size;
     }
 
     public void tick() {
@@ -93,12 +118,13 @@ public class Cell {
             }
             Ellipse2D figure = new Ellipse2D.Double(x, y, size, size);
             Polygon polygon = new Polygon();
-            if (!this.food)
-            g.fill(figure);
-            else{
-                for (int i = 0; i < 6; i++)
+            if (!this.food) {
+                g.fill(figure);
+            }else{
+                for (int i = 0; i < 6; i++) {
                     polygon.addPoint((int) (x + 10 * Math.cos(i * 2 * Math.PI / 6)),
-                            (int) (y + 10 * Math.sin(i * 2 * Math.PI / 6)));
+                        (int) (y + 10 * Math.sin(i * 2 * Math.PI / 6)));
+                }
                 g.fill(polygon);
             }
         }
@@ -129,4 +155,5 @@ public class Cell {
         g.setColor(new Color(255, 255, 255));
         g.drawString(string, x, y);
     }
+
 }
