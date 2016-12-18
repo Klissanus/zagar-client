@@ -19,7 +19,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,9 +55,9 @@ public class Game {
     @NotNull
     private static ConcurrentLinkedDeque<Cell> player = new ConcurrentLinkedDeque<>();
     @NotNull
-    private static List<Cell> bufCells = new CopyOnWriteArrayList<>();
+    private static volatile List<Cell> bufCells = new CopyOnWriteArrayList<>();
     @NotNull
-    private static ConcurrentLinkedDeque<Cell> bufPlayer = new ConcurrentLinkedDeque<>();
+    private static volatile ConcurrentLinkedDeque<Cell> bufPlayer = new ConcurrentLinkedDeque<>();
     @NotNull
   public String gameServerUrl;
   @NotNull
@@ -258,7 +257,7 @@ public class Game {
       sortCells();
       sortTimer = 0;
     }
-    socket.session.getRemote().sendPing(ByteBuffer.allocate(48));
+    //socket.session.getRemote().sendPing(ByteBuffer.allocate(48));
   }
   private enum AuthOption {
     REGISTER, LOGIN
