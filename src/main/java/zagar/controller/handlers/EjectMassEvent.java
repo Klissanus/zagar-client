@@ -7,7 +7,7 @@ import java.io.IOException;
 /**
  * Created by Klissan on 29.11.2016.
  */
-public class EjectMassEvent implements  Event  {
+public class EjectMassEvent implements Event {
     @Override
     public void handle() {
         try {

@@ -29,15 +29,6 @@ public abstract class Cell {
         this.color = color;
     }
 
-    public void tick() {
-        this.coordinate = new Point2D.Double(
-                renderCoordinate.getX() - coordinate.getX() / 5,
-                renderCoordinate.getY() - coordinate.getY() / 5
-        );
-        this.sizeRender -= (this.sizeRender - size) / 9;
-        this.mass = Math.round((this.sizeRender * this.sizeRender) / 100);
-    }
-
     public static Color generateColor() {
         Random rand = new Random();
         float r = rand.nextFloat();
@@ -46,10 +37,19 @@ public abstract class Cell {
         return new Color(r, g, b);
     }
 
+    public void tick() {
+        renderCoordinate = new Point2D.Double(
+                renderCoordinate.getX() - (renderCoordinate.getX() - coordinate.getX()) / 5f,
+                renderCoordinate.getY() - (renderCoordinate.getY() - coordinate.getY()) / 5f
+        );
+        sizeRender -= (sizeRender - size) / 9f;
+        mass = Math.round((sizeRender * sizeRender) / 100);
+    }
+
     public void render(@NotNull Graphics2D g, float scale) {
         GameFrame frame = Main.getFrame();
         g.setColor(color);
-        if (Game.getPlayers().size() > 0) {
+        if (!Game.getPlayers().isEmpty()) {
             int size = (int) ((this.sizeRender * 2f * scale) * Game.zoom);
 
             float avgX = 0;
@@ -78,11 +78,9 @@ public abstract class Cell {
     }
 
     protected void addShape(@NotNull Graphics2D g, @NotNull Point2D centerCoordinate) {
-        Ellipse2D figure = new Ellipse2D.Double(centerCoordinate.getX(),centerCoordinate.getY(), getSize(), getSize());
+        Ellipse2D figure = new Ellipse2D.Double(centerCoordinate.getX(), centerCoordinate.getY(), getSize(), getSize());
         g.fill(figure);
     }
-
-
 
     @NotNull
     public Point2D getCoordinate() {

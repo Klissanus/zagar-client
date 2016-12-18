@@ -10,9 +10,20 @@ import java.text.ParseException;
  * Created by xakep666 on 02.11.16.
  */
 public class HostInputForm {
+    private static final int HOST_FORM_CHARS = 20;
     @NotNull
     private static MaskFormatter portMF;
-    private static final int HOST_FORM_CHARS = 20;
+
+    static {
+        try {
+            portMF = new MaskFormatter("*****");
+            portMF.setValidCharacters("0123456789");
+        } catch (ParseException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+    }
+
     @NotNull
     private JFormattedTextField hostField;
     @NotNull
@@ -25,17 +36,7 @@ public class HostInputForm {
     private String host = "";
     private int port;
 
-    static {
-        try {
-            portMF = new MaskFormatter("*****");
-            portMF.setValidCharacters("0123456789");
-        } catch (ParseException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
-
-    public HostInputForm(@NotNull String hostdesc,@NotNull String defaultHost, int defaultPort){
+    public HostInputForm(@NotNull String hostdesc, @NotNull String defaultHost, int defaultPort) {
         hostField = new JFormattedTextField();
         portField = new JFormattedTextField(portMF);
         panel.add(new JLabel("Host:"));
@@ -48,20 +49,20 @@ public class HostInputForm {
             @Override
             public boolean verify(JComponent jComponent) {
                 int port = Integer.parseInt(((JTextField) jComponent).getText().trim());
-                return port>0 && port<=65535;
+                return port > 0 && port <= 65535;
             }
         });
         panel.add(portField);
-        this.hostdesc=hostdesc;
+        this.hostdesc = hostdesc;
     }
 
     public boolean showForm() {
-        int result = JOptionPane.showConfirmDialog(null,panel,
-                "Please enter "+hostdesc+" host address",JOptionPane.OK_CANCEL_OPTION);
+        int result = JOptionPane.showConfirmDialog(null, panel,
+                "Please enter " + hostdesc + " host address", JOptionPane.OK_CANCEL_OPTION);
         try {
-            host=hostField.getText();
-            port=Integer.parseInt(portField.getText().trim());
-            return result==JOptionPane.OK_OPTION;
+            host = hostField.getText();
+            port = Integer.parseInt(portField.getText().trim());
+            return result == JOptionPane.OK_OPTION;
         } catch (NumberFormatException e) {
             e.printStackTrace();
             return false;

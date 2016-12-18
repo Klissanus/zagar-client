@@ -7,7 +7,7 @@ import java.io.IOException;
 /**
  * Created by Klissan on 29.11.2016.
  */
-public class SplitEvent implements  Event {
+public class SplitEvent implements Event {
     @Override
     public void handle() {
         try {

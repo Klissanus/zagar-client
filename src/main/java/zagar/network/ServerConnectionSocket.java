@@ -26,8 +26,8 @@ import java.util.concurrent.TimeUnit;
 
 @WebSocket(maxTextMessageSize = 100000)
 public class ServerConnectionSocket {
-  @NotNull
-  private static final Logger log = LogManager.getLogger(ServerConnectionSocket.class);
+    @NotNull
+    private static final Logger log = LogManager.getLogger(ServerConnectionSocket.class);
     @NotNull
     private static final Map<String, PacketHandler> handleMap = new HashMap<>();
 
@@ -38,50 +38,50 @@ public class ServerConnectionSocket {
         handleMap.put(CommandAuthOk.NAME, new PacketHandlerAuthOk());
     }
 
-  @NotNull
-  private final CountDownLatch closeLatch;
-  @NotNull
-  public Session session;
+    @NotNull
+    private final CountDownLatch closeLatch;
+    @NotNull
+    public Session session;
 
 
-  public ServerConnectionSocket() {
-    this.closeLatch = new CountDownLatch(1);
-  }
-
-  public boolean awaitClose(int duration, @NotNull TimeUnit unit) throws InterruptedException {
-    return this.closeLatch.await(duration, unit);
-  }
-
-  @OnWebSocketClose
-  public void onClose(int statusCode, @NotNull String reason) {
-    log.info("Closed." + statusCode + "<" + reason + ">");
-    this.closeLatch.countDown();
-  }
-
-  @OnWebSocketConnect
-  public void onConnect(@NotNull Session session) throws IOException {
-    this.session = session;
-
-    log.info("Connected!");
-
-    new PacketAuth(Game.login, Game.serverToken).write();
-  }
-
-  @OnWebSocketMessage
-  public void onTextPacket(@NotNull String msg) {
-    log.info("Received packet: " + msg);
-    if (session.isOpen()) {
-      handlePacket(msg);
+    public ServerConnectionSocket() {
+        this.closeLatch = new CountDownLatch(1);
     }
-  }
+
+    public boolean awaitClose(int duration, @NotNull TimeUnit unit) throws InterruptedException {
+        return this.closeLatch.await(duration, unit);
+    }
+
+    @OnWebSocketClose
+    public void onClose(int statusCode, @NotNull String reason) {
+        log.info("Closed." + statusCode + "<" + reason + ">");
+        this.closeLatch.countDown();
+    }
+
+    @OnWebSocketConnect
+    public void onConnect(@NotNull Session session) throws IOException {
+        this.session = session;
+
+        log.info("Connected!");
+
+        new PacketAuth(Game.login, Game.serverToken).write();
+    }
+
+    @OnWebSocketMessage
+    public void onTextPacket(@NotNull String msg) {
+        log.info("Received packet: " + msg);
+        if (session.isOpen()) {
+            handlePacket(msg);
+        }
+    }
 
     private void handlePacket(@NotNull String msg) {
-    JsonObject json = JSONHelper.getJSONObject(msg);
-    try {
-      String name = json.get("command").getAsString();
-        handleMap.get(name).handle(msg);
-    }catch(Exception e){
-      log.warn("Command error in received packet: " + e);
+        JsonObject json = JSONHelper.getJSONObject(msg);
+        try {
+            String name = json.get("command").getAsString();
+            handleMap.get(name).handle(msg);
+        } catch (Exception e) {
+            log.warn("Command error in received packet: " + e);
+        }
     }
-  }
 }
