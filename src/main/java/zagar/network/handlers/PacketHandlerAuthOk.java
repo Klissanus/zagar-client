@@ -10,15 +10,15 @@ import protocol.commands.CommandThankYou;
 import java.io.IOException;
 
 public class PacketHandlerAuthOk implements PacketHandler {
-  public void handle(@NotNull String msg) {
-    Game.state = Game.GameState.AUTHORIZED;
-    try {
-      String json = JSONHelper.toJSON(new CommandThankYou(Game.login));
-      Game.socket.session.getRemote().sendString(json);
-      //send window size
-        new PacketWindowSize(Main.getFrame().getSize()).write();
-    } catch (IOException e) {
-      e.printStackTrace();
+    public void handle(@NotNull String msg) {
+        Game.state = Game.GameState.AUTHORIZED;
+        try {
+            String json = JSONHelper.toJSON(new CommandThankYou(Game.login));
+            Game.socket.session.getRemote().sendString(json);
+            //send window size
+            new PacketWindowSize(Main.getFrame().getSize()).write();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-  }
 }

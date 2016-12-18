@@ -8,15 +8,15 @@ import org.jetbrains.annotations.NotNull;
 import protocol.commands.CommandAuthFail;
 
 public class PacketHandlerAuthFail implements PacketHandler {
-  public void handle(@NotNull String json) {
-    CommandAuthFail commandAuthFail;
-    try {
-      commandAuthFail = JSONHelper.fromJSON(json, CommandAuthFail.class);
-    } catch (JSONDeserializationException e) {
-      e.printStackTrace();
-      return;
+    public void handle(@NotNull String json) {
+        CommandAuthFail commandAuthFail;
+        try {
+            commandAuthFail = JSONHelper.fromJSON(json, CommandAuthFail.class);
+        } catch (JSONDeserializationException e) {
+            e.printStackTrace();
+            return;
+        }
+        Game.state = Game.GameState.NOT_AUTHORIZED;
+        Reporter.reportFail("Token authentication failed", commandAuthFail.getCause());
     }
-    Game.state = Game.GameState.NOT_AUTHORIZED;
-    Reporter.reportFail("Token authentication failed", commandAuthFail.getCause());
-  }
 }
