@@ -91,11 +91,11 @@ public class Cell {
                     y < -size - 30 || y > frame.getHeight() + 30) {
                return;
             }
-            Ellipse2D figure = new Ellipse2D.Double(x, y, size, size);
-            Polygon polygon = new Polygon();
-            if (!this.food)
-            g.fill(figure);
-            else{
+            if (!this.food) {
+                Ellipse2D figure = new Ellipse2D.Double(x, y, size, size);
+                g.fill(figure);
+            } else {
+                Polygon polygon = new Polygon();
                 for (int i = 0; i < 6; i++)
                     polygon.addPoint((int) (x + 10 * Math.cos(i * 2 * Math.PI / 6)),
                             (int) (y + 10 * Math.sin(i * 2 * Math.PI / 6)));
