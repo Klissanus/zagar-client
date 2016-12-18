@@ -1,14 +1,29 @@
 package main.java.zagar.util;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.typeadapters.RuntimeTypeAdapterFactory;
 import org.jetbrains.annotations.NotNull;
+import protocol.model.*;
 
 /**
  * @author apomosov
  */
 public class JSONHelper {
   @NotNull
-  private static Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+  private static RuntimeTypeAdapterFactory<Cell> cellAdapterFactory =
+          RuntimeTypeAdapterFactory.of(Cell.class)
+                  .registerSubtype(Virus.class)
+                  .registerSubtype(EjectedMass.class)
+                  .registerSubtype(Food.class)
+                  .registerSubtype(PlayerCell.class);
+  @NotNull
+  private static Gson gson = new GsonBuilder()
+          .excludeFieldsWithoutExposeAnnotation()
+          .registerTypeAdapterFactory(cellAdapterFactory)
+          .create();
 
   @NotNull
   public static String toJSON(@NotNull Object object) {

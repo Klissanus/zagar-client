@@ -1,6 +1,7 @@
 package main.java.zagar.view;
 
 import main.java.zagar.Game;
+import main.java.zagar.view.cells.Cell;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -10,7 +11,6 @@ import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 
 public class GameCanvas extends JPanel {
-  private static final long serialVersionUID = 5570080027060608254L;
   public Font fontCells = new Font("Ubuntu", Font.BOLD, 18);
   private BufferedImage screen;
   private Font font = new Font("Ubuntu", Font.BOLD, 30);
@@ -47,13 +47,13 @@ public class GameCanvas extends JPanel {
       if (Game.getPlayers().size() > 0) {
       int size = 1;
 
-      float avgX = 0;
-      float avgY = 0;
+      double avgX = 0;
+      double avgY = 0;
 
           for (Cell c : Game.getPlayers()) {
         if (c != null) {
-          avgX += c.getxRender();
-          avgY += c.getyRender();
+          avgX += c.getRenderCoordinate().getX();
+          avgY += c.getRenderCoordinate().getY();
         }
       }
 
@@ -85,41 +85,18 @@ public class GameCanvas extends JPanel {
       }
     });
 
-    this.drawScore(g);
-    this.drawScoreboard(g);
+    g.setFont(font);
 
-    g.dispose();
+    String scoreString = "Score: " + Game.score;
 
-    Graphics gg = this.getGraphics();
-    gg.drawImage(screen, 0, 0, null);
-    gg.dispose();
-  }
+    g.setColor(new Color(0, 0, 0, 0.5f));
 
-  private int getStringWidth(Graphics2D g, String string) {
-    BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-    FontMetrics fm = img.getGraphics().getFontMetrics(g.getFont());
+    g.fillRect(getWidth() - 202, 10, 184, 265);
+    g.fillRect(7, getHeight() - 85, getStringWidth(g, scoreString) + 26, 47);
 
-    return fm.stringWidth(string);
-  }
+    g.setColor(Color.WHITE);
 
-private void  drawScore(Graphics2D g){
-
-  g.setFont(font);
-
-  String scoreString = "Score: " + Game.score;
-
-  g.setColor(new Color(0, 0, 0, 0.5f));
-
-  g.fillRect(getWidth() - 202, 10, 184, 265);
-  g.fillRect(7, getHeight() - 85, getStringWidth(g, scoreString) + 26, 47);
-
-  g.setColor(Color.WHITE);
-
-  g.drawString(scoreString, 20, getHeight() - 50);
-
-}
-
-  private void drawScoreboard( Graphics2D g){
+    g.drawString(scoreString, 20, getHeight() - 50);
 
     int i = 0;
 
@@ -136,6 +113,18 @@ private void  drawScore(Graphics2D g){
       i++;
     }
 
+    g.dispose();
+
+    Graphics gg = this.getGraphics();
+    gg.drawImage(screen, 0, 0, null);
+    gg.dispose();
+  }
+
+  private int getStringWidth(Graphics2D g, String string) {
+    BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+    FontMetrics fm = img.getGraphics().getFontMetrics(g.getFont());
+
+    return fm.stringWidth(string);
   }
 
   private class SizeChangeListener implements ComponentListener {
@@ -161,6 +150,5 @@ private void  drawScore(Graphics2D g){
     public void componentHidden(ComponentEvent componentEvent) {
 
     }
-
   }
 }

@@ -5,7 +5,8 @@ import main.java.zagar.network.ServerConnectionSocket;
 import main.java.zagar.network.packets.PacketEjectMass;
 import main.java.zagar.network.packets.PacketMove;
 import main.java.zagar.util.Reporter;
-import main.java.zagar.view.Cell;
+import main.java.zagar.view.cells.Cell;
+import main.java.zagar.view.cells.PlayerCell;
 import main.java.zagar.view.inputforms.HostInputForm;
 import main.java.zagar.view.inputforms.LoginPasswordInputForm;
 import org.apache.logging.log4j.LogManager;
@@ -22,9 +23,9 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static main.java.zagar.GameConstants.*;
 
@@ -53,11 +54,7 @@ public class Game {
   @NotNull
   private static List<Cell> cells = new CopyOnWriteArrayList<>();
     @NotNull
-    private static ConcurrentLinkedDeque<Cell> player = new ConcurrentLinkedDeque<>();
-    @NotNull
     private static volatile List<Cell> bufCells = new CopyOnWriteArrayList<>();
-    @NotNull
-    private static volatile ConcurrentLinkedDeque<Cell> bufPlayer = new ConcurrentLinkedDeque<>();
     @NotNull
   public String gameServerUrl;
   @NotNull
@@ -112,15 +109,8 @@ public class Game {
     });
   }
 
-    public static void updateBuffer(@NotNull List<Cell> cells,
-                                    @NotNull ConcurrentLinkedDeque<Cell> player) {
+    public static void updateBuffer(@NotNull List<Cell> cells) {
         bufCells = cells;
-        bufPlayer = player;
-    }
-
-    @NotNull
-    public static ConcurrentLinkedDeque<Cell> getPlayers() {
-        return player;
     }
 
     @NotNull
@@ -182,35 +172,23 @@ public class Game {
     return null;
   }
 
+  public static List<PlayerCell> getPlayers() {
+    return cells.stream()
+            .filter(PlayerCell.class::isInstance)
+            .map(PlayerCell.class::cast)
+            .collect(Collectors.toList());
+  }
+
   public void tick() throws IOException {
     log.info("[TICK]");
       //read from buffer
       cells = new CopyOnWriteArrayList<>(bufCells);
-      player = new ConcurrentLinkedDeque<>(bufPlayer);
 
-    //moved to PacketHandlerReplicate
-    /*ArrayList<Integer> toRemove = new ArrayList<>();
 
-    for (int i : playerID) {
-      for (Cell c : Game.cells) {
-        if (c != null) {
-          if (c.id == i && !player.contains(c)) {
-            log.info("Centered cell " + c.name);
-            player.add(c);
-            toRemove.add(i);
-          }
-        }
-      }
-    }
-
-    for (int i : toRemove) {
-      playerID.remove(playerID.indexOf(i));
-    }*/
-
-    if (socket.session != null && player.size() > 0) {
+    if (socket.session != null && getPlayers().size() > 0) {
       float totalSize = 0;
       int newScore = 0;
-      for (Cell c : player) {
+      for (Cell c : getPlayers()) {
         totalSize += c.getSize();
         newScore += (c.getSize() * c.getSize()) / 100;
       }
