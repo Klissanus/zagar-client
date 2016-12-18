@@ -108,7 +108,7 @@ public class Game {
       if (o2 == null) {
         return -1;
       }
-      return Float.compare(o1.size, o2.size);
+      return Float.compare(o1.getSize(), o2.getSize());
     });
   }
 
@@ -211,8 +211,8 @@ public class Game {
       float totalSize = 0;
       int newScore = 0;
       for (Cell c : player) {
-        totalSize += c.size;
-        newScore += (c.size * c.size) / 100;
+        totalSize += c.getSize();
+        newScore += (c.getSize() * c.getSize()) / 100;
       }
 
       if (newScore > score) {

@@ -52,8 +52,8 @@ public class GameCanvas extends JPanel {
 
           for (Cell c : Game.getPlayers()) {
         if (c != null) {
-          avgX += c.xRender;
-          avgY += c.yRender;
+          avgX += c.getxRender();
+          avgY += c.getyRender();
         }
       }
 
@@ -79,24 +79,47 @@ public class GameCanvas extends JPanel {
       Game.getCells().forEach(cell -> {
       if (cell != null) {
         cell.render(g, 1);
-        if (cell.mass > 9) {
-          cell.render(g, Math.max(1 - 1f / (cell.mass / 10f), 0.87f));
+        if (cell.getMass() > 9) {
+          cell.render(g, Math.max(1 - 1f / (cell.getMass() / 10f), 0.87f));
         }
       }
     });
 
-    g.setFont(font);
+    this.drawScore(g);
+    this.drawScoreboard(g);
 
-    String scoreString = "Score: " + Game.score;
+    g.dispose();
 
-    g.setColor(new Color(0, 0, 0, 0.5f));
+    Graphics gg = this.getGraphics();
+    gg.drawImage(screen, 0, 0, null);
+    gg.dispose();
+  }
 
-    g.fillRect(getWidth() - 202, 10, 184, 265);
-    g.fillRect(7, getHeight() - 85, getStringWidth(g, scoreString) + 26, 47);
+  private int getStringWidth(Graphics2D g, String string) {
+    BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+    FontMetrics fm = img.getGraphics().getFontMetrics(g.getFont());
 
-    g.setColor(Color.WHITE);
+    return fm.stringWidth(string);
+  }
 
-    g.drawString(scoreString, 20, getHeight() - 50);
+private void  drawScore(Graphics2D g){
+
+  g.setFont(font);
+
+  String scoreString = "Score: " + Game.score;
+
+  g.setColor(new Color(0, 0, 0, 0.5f));
+
+  g.fillRect(getWidth() - 202, 10, 184, 265);
+  g.fillRect(7, getHeight() - 85, getStringWidth(g, scoreString) + 26, 47);
+
+  g.setColor(Color.WHITE);
+
+  g.drawString(scoreString, 20, getHeight() - 50);
+
+}
+
+  private void drawScoreboard( Graphics2D g){
 
     int i = 0;
 
@@ -113,18 +136,6 @@ public class GameCanvas extends JPanel {
       i++;
     }
 
-    g.dispose();
-
-    Graphics gg = this.getGraphics();
-    gg.drawImage(screen, 0, 0, null);
-    gg.dispose();
-  }
-
-  private int getStringWidth(Graphics2D g, String string) {
-    BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-    FontMetrics fm = img.getGraphics().getFontMetrics(g.getFont());
-
-    return fm.stringWidth(string);
   }
 
   private class SizeChangeListener implements ComponentListener {
@@ -150,5 +161,6 @@ public class GameCanvas extends JPanel {
     public void componentHidden(ComponentEvent componentEvent) {
 
     }
+
   }
 }

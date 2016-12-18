@@ -43,7 +43,23 @@ public class Cell {
         }
     }
 
-    public void tick() {
+  public float getSize() {
+    return size;
+  }
+
+  public int getMass() {
+    return mass;
+  }
+
+  public double getxRender() {
+    return xRender;
+  }
+
+  public double getyRender() {
+    return yRender;
+  }
+
+  public void tick() {
         this.xRender -= (this.xRender - x) / 5f;
         this.yRender -= (this.yRender - y) / 5f;
         this.sizeRender -= (this.sizeRender - size) / 9f;
@@ -96,10 +112,11 @@ public class Cell {
                 g.fill(figure);
             } else {
                 Polygon polygon = new Polygon();
-                for (int i = 0; i < 6; i++)
-                    polygon.addPoint((int) (x + 10 * Math.cos(i * 2 * Math.PI / 6)),
-                            (int) (y + 10 * Math.sin(i * 2 * Math.PI / 6)));
-                g.fill(polygon);
+                for (int i = 0; i < 6; i++) {
+                  polygon.addPoint((int) (x + 10 * Math.cos(i * 2 * Math.PI / 6)),
+                      (int) (y + 10 * Math.sin(i * 2 * Math.PI / 6)));
+                  g.fill(polygon);
+                }
             }
         }
 
