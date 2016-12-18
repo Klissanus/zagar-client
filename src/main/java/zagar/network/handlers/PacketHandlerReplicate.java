@@ -4,16 +4,10 @@ import main.java.zagar.Game;
 import main.java.zagar.util.JSONDeserializationException;
 import main.java.zagar.util.JSONHelper;
 import main.java.zagar.view.cells.*;
-import main.java.zagar.view.cells.Cell;
-import main.java.zagar.view.cells.EjectedMass;
-import main.java.zagar.view.cells.Food;
-import main.java.zagar.view.cells.PlayerCell;
-import main.java.zagar.view.cells.Virus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import protocol.commands.CommandReplicate;
-import protocol.model.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -37,16 +31,16 @@ public class PacketHandlerReplicate implements PacketHandler {
                 if (cell instanceof protocol.model.PlayerCell) {
                   protocol.model.PlayerCell c = ((protocol.model.PlayerCell) cell);
                   String name = c.getPlayerName();
-                  return new PlayerCell(c.getCoordinate(), Cell.generateColor(),c.getSize()*10,name);
+                  return new PlayerCell(c.getCoordinate(), Cell.generateColor(),c.getSize(),name);
                 } else if (cell instanceof protocol.model.Virus) {
                   protocol.model.Virus c = ((protocol.model.Virus) cell);
-                  return new Virus(c.getCoordinate(),c.getSize()*10);
+                  return new Virus(c.getCoordinate(),c.getSize());
                 } else if (cell instanceof protocol.model.Food) {
                   protocol.model.Food c = ((protocol.model.Food) cell);
-                  return new Food(c.getCoordinate(),Cell.generateColor(),c.getSize()*10);
+                  return new Food(c.getCoordinate(),Cell.generateColor(),c.getSize());
                 } else if (cell instanceof protocol.model.EjectedMass) {
                   protocol.model.EjectedMass c = ((protocol.model.EjectedMass) cell);
-                  return new EjectedMass(c.getCoordinate(),Cell.generateColor(),c.getSize()*10);
+                  return new EjectedMass(c.getCoordinate(),Cell.generateColor(),c.getSize());
                 }
                 return null;
               })
