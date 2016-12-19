@@ -7,7 +7,7 @@ import main.java.zagar.util.Reporter;
 import org.jetbrains.annotations.NotNull;
 import protocol.commands.CommandAuthFail;
 
-public class PacketHandlerAuthFail implements PacketHandler {
+public class TextPacketHandlerAuthFail implements TextPacketHandler {
     public void handle(@NotNull String json) {
         CommandAuthFail commandAuthFail;
         try {

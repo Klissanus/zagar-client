@@ -18,24 +18,30 @@ import protocol.commands.CommandAuthOk;
 import protocol.commands.CommandLeaderBoard;
 import protocol.commands.CommandReplicate;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.GZIPInputStream;
 
 @WebSocket(maxTextMessageSize = 100000)
 public class ServerConnectionSocket {
     @NotNull
     private static final Logger log = LogManager.getLogger(ServerConnectionSocket.class);
     @NotNull
-    private static final Map<String, PacketHandler> handleMap = new HashMap<>();
+    private static final Map<String, TextPacketHandler> textHandleMap = new HashMap<>();
+    @NotNull
+    private static final Map<String, BinaryPacketHandler> unZippedPacketHandleMap = new HashMap<>();
 
     static {
-        handleMap.put(CommandLeaderBoard.NAME, new PacketHandlerLeaderBoard());
-        handleMap.put(CommandReplicate.NAME, new PacketHandlerReplicate());
-        handleMap.put(CommandAuthFail.NAME, new PacketHandlerAuthFail());
-        handleMap.put(CommandAuthOk.NAME, new PacketHandlerAuthOk());
+        textHandleMap.put(CommandLeaderBoard.NAME, new TextPacketHandlerLeaderBoard());
+        textHandleMap.put(CommandAuthFail.NAME, new TextPacketHandlerAuthFail());
+        textHandleMap.put(CommandAuthOk.NAME, new TextPacketHandlerAuthOk());
+        unZippedPacketHandleMap.put(CommandReplicate.NAME, new BinaryPacketHandlerReplicate());
     }
 
     @NotNull
@@ -75,13 +81,46 @@ public class ServerConnectionSocket {
         }
     }
 
+    @OnWebSocketMessage
+    public void onBinaryPacket(@NotNull InputStream inputStream) {
+        try {
+            GZIPInputStream gis = new GZIPInputStream(inputStream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(gis, "UTF-8"));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            br.close();
+            gis.close();
+            inputStream.close();
+            String msg = sb.toString();
+            log.info("Received compressed packet: " + msg);
+            if (session.isOpen()) {
+                handleUnZippedPacket(msg);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void handlePacket(@NotNull String msg) {
         JsonObject json = JSONHelper.getJSONObject(msg);
         try {
             String name = json.get("command").getAsString();
-            handleMap.get(name).handle(msg);
+            textHandleMap.get(name).handle(msg);
         } catch (Exception e) {
             log.warn("Command error in received packet: " + e);
+        }
+    }
+
+    private void handleUnZippedPacket(@NotNull String msg) {
+        JsonObject json = JSONHelper.getJSONObject(msg);
+        try {
+            String name = json.get("command").getAsString();
+            unZippedPacketHandleMap.get(name).handle(msg);
+        } catch (Exception e) {
+            log.warn("Command error in received zipped packet: " + e);
         }
     }
 }

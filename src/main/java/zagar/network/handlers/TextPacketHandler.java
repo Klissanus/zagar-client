@@ -7,6 +7,6 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * Interface for packet handlers
  */
-public interface PacketHandler {
+public interface TextPacketHandler {
     void handle(@NotNull String message);
 }

@@ -9,7 +9,7 @@ import protocol.commands.CommandThankYou;
 
 import java.io.IOException;
 
-public class PacketHandlerAuthOk implements PacketHandler {
+public class TextPacketHandlerAuthOk implements TextPacketHandler {
     public void handle(@NotNull String msg) {
         Game.state = Game.GameState.AUTHORIZED;
         try {

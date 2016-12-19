@@ -13,14 +13,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class PacketHandlerReplicate implements PacketHandler {
+public class BinaryPacketHandlerReplicate implements BinaryPacketHandler {
   @NotNull
-  private static final Logger log = LogManager.getLogger(PacketHandlerReplicate.class);
+  private static final Logger log = LogManager.getLogger(BinaryPacketHandlerReplicate.class);
 
-  public void handle(@NotNull String json) {
+    @Override
+    public void handle(@NotNull String msg) {
     CommandReplicate commandReplicate;
     try {
-      commandReplicate = JSONHelper.fromJSON(json, CommandReplicate.class);
+        commandReplicate = JSONHelper.fromJSON(msg, CommandReplicate.class);
     } catch (JSONDeserializationException e) {
       e.printStackTrace();
       return;

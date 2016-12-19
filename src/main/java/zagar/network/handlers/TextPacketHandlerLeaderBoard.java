@@ -6,7 +6,7 @@ import main.java.zagar.util.JSONHelper;
 import org.jetbrains.annotations.NotNull;
 import protocol.commands.CommandLeaderBoard;
 
-public class PacketHandlerLeaderBoard implements PacketHandler {
+public class TextPacketHandlerLeaderBoard implements TextPacketHandler {
     public void handle(@NotNull String json) {
         CommandLeaderBoard commandLeaderBoard;
         try {
