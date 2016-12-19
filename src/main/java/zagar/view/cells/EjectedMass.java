@@ -9,7 +9,10 @@ import java.awt.geom.Point2D;
  * Created by xakep666 on 18.12.16.
  */
 public final class EjectedMass extends Cell {
-    public EjectedMass(@NotNull Point2D coordinate, @NotNull Color color, double size) {
-        super(coordinate, color, size);
+    public EjectedMass(@NotNull Point2D coordinate,
+                       @NotNull Color color,
+                       double mass,
+                       double radius) {
+        super(coordinate, color, mass, radius);
     }
 }

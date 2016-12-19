@@ -12,20 +12,20 @@ import java.util.Random;
 
 public abstract class Cell {
     @NotNull
-    private Point2D coordinate;
+    private final Point2D coordinate;
     @NotNull
     private Point2D renderCoordinate;
-    private double mass;
-    private double size;
+    private final double mass;
+    private final double size;
     private double sizeRender;
     @NotNull
-    private Color color;
+    private final Color color;
 
-    Cell(@NotNull Point2D coordinate, @NotNull Color color, double mass) {
+    Cell(@NotNull Point2D coordinate, @NotNull Color color, double mass, double radius) {
         this.coordinate = coordinate;
         this.renderCoordinate = coordinate;
         this.mass = mass;
-        this.size = 10 * Math.sqrt(this.mass / Math.PI); //from server
+        this.size = radius;
         this.sizeRender = this.size;
         this.color = color;
     }

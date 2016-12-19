@@ -14,8 +14,12 @@ public final class PlayerCell extends Cell {
     @NotNull
     private String name;
 
-    public PlayerCell(@NotNull Point2D coordinate, @NotNull Color color, double size, @NotNull String name) {
-        super(coordinate, color, size);
+    public PlayerCell(@NotNull Point2D coordinate,
+                      @NotNull Color color,
+                      double mass,
+                      double radius,
+                      @NotNull String name) {
+        super(coordinate, color, mass, radius);
         this.name = name;
     }
 
