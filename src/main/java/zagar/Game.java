@@ -5,6 +5,7 @@ import main.java.zagar.network.ServerConnectionSocket;
 import main.java.zagar.network.packets.PacketEjectMass;
 import main.java.zagar.network.packets.PacketMove;
 import main.java.zagar.util.Reporter;
+import main.java.zagar.view.GameFrame;
 import main.java.zagar.view.cells.Cell;
 import main.java.zagar.view.cells.PlayerCell;
 import main.java.zagar.view.inputforms.HostInputForm;
@@ -101,7 +102,7 @@ public class Game {
             if (o2 == null) {
                 return -1;
             }
-            return Float.compare(o1.getSize(), o2.getSize());
+            return Double.compare(o1.getSize(), o2.getSize());
         });
     }
 
@@ -182,16 +183,15 @@ public class Game {
 
 
         if (socket.session != null && getPlayers().size() > 0) {
-            float totalSize = 0;
-            int newScore = 0;
-            for (Cell c : getPlayers()) {
+            int totalScore = 0;
+            int totalSize = 0;
+
+            for(Cell c: cells) {
+                totalScore += c.getMass();
                 totalSize += c.getSize();
-                newScore += (c.getSize() * c.getSize()) / 100;
             }
 
-            if (newScore > score) {
-                score = newScore;
-            }
+            score = totalScore;
 
             double zoomm = Main.getFrame().getSize().getHeight() / (1024 / Math.pow(Math.min(64.0 / totalSize, 1), 0.4));
 
@@ -211,11 +211,17 @@ public class Game {
                 bounds.setLocation(Main.getFrame().getLocationOnScreen());
                 if (!bounds.contains(mousePos) || !Main.getFrame().isFocused()) return;
 
-                //normalize to half size of window
-                float dx = (float) (mousePos.getX() - bounds.getCenterX()) / (Main.getFrame().getSize().height * zoom);
-                float dy = (float) (mousePos.getY() - bounds.getCenterY()) / (Main.getFrame().getSize().height * zoom);
+                GameFrame frame = Main.getFrame();
 
-                new PacketMove(dx, dy).write(socket.session);
+                double x = (mousePos.getX() - (frame.getX() + frame.getWidth() / 2)) / zoom;
+                double y = (mousePos.getY() - (frame.getY() + frame.getHeight() / 2)) / zoom;
+
+
+                double size = getPlayers().stream().map(Cell::getSize).max(Double::compare).orElse(1.0);
+                double dx = x / Math.max(Math.abs(x)/10f, size);
+                double dy = y / Math.max(Math.abs(y)/10f, size);
+
+                new PacketMove((float)dx, (float)dy).write(socket.session);
 
                 if (rapidEject) {
                     new PacketEjectMass().write();
