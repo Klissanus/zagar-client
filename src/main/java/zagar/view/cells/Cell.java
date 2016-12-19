@@ -15,16 +15,17 @@ public abstract class Cell {
     private Point2D coordinate;
     @NotNull
     private Point2D renderCoordinate;
-    private int mass;
-    private float size;
-    private float sizeRender;
+    private double mass;
+    private double size;
+    private double sizeRender;
     @NotNull
     private Color color;
 
-    Cell(@NotNull Point2D coordinate, @NotNull Color color, float size) {
+    Cell(@NotNull Point2D coordinate, @NotNull Color color, double mass) {
         this.coordinate = coordinate;
         this.renderCoordinate = coordinate;
-        this.size = size;
+        this.mass = mass;
+        this.size = 10 * Math.sqrt(this.mass / Math.PI); //from server
         this.sizeRender = this.size;
         this.color = color;
     }
@@ -43,14 +44,13 @@ public abstract class Cell {
                 renderCoordinate.getY() - (renderCoordinate.getY() - coordinate.getY()) / 5f
         );
         sizeRender -= (sizeRender - size) / 9f;
-        mass = Math.round((sizeRender * sizeRender) / 100);
     }
 
-    public void render(@NotNull Graphics2D g, float scale) {
+    public void render(@NotNull Graphics2D g, double scale) {
         GameFrame frame = Main.getFrame();
         g.setColor(color);
         if (!Game.getPlayers().isEmpty()) {
-            int size = (int) ((this.sizeRender * 2f * scale) * Game.zoom);
+            int size = (int) ((this.sizeRender * 2.0 * scale) * Game.zoom);
 
             float avgX = 0;
             float avgY = 0;
@@ -87,11 +87,11 @@ public abstract class Cell {
         return coordinate;
     }
 
-    public int getMass() {
+    public double getMass() {
         return mass;
     }
 
-    public float getSize() {
+    public double getSize() {
         return size;
     }
 

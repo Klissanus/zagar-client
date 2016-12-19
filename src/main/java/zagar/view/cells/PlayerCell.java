@@ -14,7 +14,7 @@ public final class PlayerCell extends Cell {
     @NotNull
     private String name;
 
-    public PlayerCell(@NotNull Point2D coordinate, @NotNull Color color, float size, @NotNull String name) {
+    public PlayerCell(@NotNull Point2D coordinate, @NotNull Color color, double size, @NotNull String name) {
         super(coordinate, color, size);
         this.name = name;
     }
@@ -23,9 +23,9 @@ public final class PlayerCell extends Cell {
     protected void addShape(@NotNull Graphics2D g, @NotNull Point2D centerCoordinate) {
         super.addShape(g, centerCoordinate);
         Font font = Main.getFrame().getCanvas().fontCells;
-        double x = getCoordinate().getX();
-        double y = getCoordinate().getY();
-        float size = getSize();
+        double x = getRenderCoordinate().getX();
+        double y = getRenderCoordinate().getY();
+        double size = getSize();
 
         BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
 

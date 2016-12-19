@@ -9,7 +9,7 @@ import java.awt.geom.Point2D;
  * Created by xakep666 on 18.12.16.
  */
 public final class Food extends Cell {
-    public Food(@NotNull Point2D coordinate, @NotNull Color color, float size) {
+    public Food(@NotNull Point2D coordinate, @NotNull Color color, double size) {
         super(coordinate, color, size);
     }
 
