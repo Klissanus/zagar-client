@@ -31,16 +31,16 @@ public class PacketHandlerReplicate implements PacketHandler {
                 if (cell instanceof protocol.model.PlayerCell) {
                   protocol.model.PlayerCell c = ((protocol.model.PlayerCell) cell);
                   String name = c.getPlayerName();
-                  return new PlayerCell(c.getCoordinate(), Cell.generateColor(),c.getSize(),name);
+                  return new PlayerCell(c.getCoordinate(), Cell.generateColor(),c.getMass(),name);
                 } else if (cell instanceof protocol.model.Virus) {
                   protocol.model.Virus c = ((protocol.model.Virus) cell);
-                  return new Virus(c.getCoordinate(),c.getSize());
+                  return new Virus(c.getCoordinate(),c.getMass());
                 } else if (cell instanceof protocol.model.Food) {
                   protocol.model.Food c = ((protocol.model.Food) cell);
-                  return new Food(c.getCoordinate(),Cell.generateColor(),c.getSize());
+                  return new Food(c.getCoordinate(),Cell.generateColor(),c.getMass());
                 } else if (cell instanceof protocol.model.EjectedMass) {
                   protocol.model.EjectedMass c = ((protocol.model.EjectedMass) cell);
-                  return new EjectedMass(c.getCoordinate(),Cell.generateColor(),c.getSize());
+                  return new EjectedMass(c.getCoordinate(),Cell.generateColor(),c.getMass());
                 }
                 return null;
               })
