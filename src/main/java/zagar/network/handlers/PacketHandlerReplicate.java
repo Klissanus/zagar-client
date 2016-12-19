@@ -4,16 +4,10 @@ import main.java.zagar.Game;
 import main.java.zagar.util.JSONDeserializationException;
 import main.java.zagar.util.JSONHelper;
 import main.java.zagar.view.cells.*;
-import main.java.zagar.view.cells.Cell;
-import main.java.zagar.view.cells.EjectedMass;
-import main.java.zagar.view.cells.Food;
-import main.java.zagar.view.cells.PlayerCell;
-import main.java.zagar.view.cells.Virus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import protocol.commands.CommandReplicate;
-import protocol.model.*;
 
 import java.util.List;
 import java.util.Objects;
