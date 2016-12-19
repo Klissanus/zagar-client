@@ -16,13 +16,16 @@ import org.jetbrains.annotations.NotNull;
 import protocol.commands.CommandAuthFail;
 import protocol.commands.CommandAuthOk;
 import protocol.commands.CommandLeaderBoard;
-import protocol.commands.CommandReplicate;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.GZIPInputStream;
 
 @WebSocket(maxTextMessageSize = 100000)
 public class ServerConnectionSocket {
@@ -30,10 +33,10 @@ public class ServerConnectionSocket {
     private static final Logger log = LogManager.getLogger(ServerConnectionSocket.class);
     @NotNull
     private static final Map<String, PacketHandler> handleMap = new HashMap<>();
-
+    @NotNull
+    private static final PacketHandlerReplicate handlerReplicate = new PacketHandlerReplicate();
     static {
         handleMap.put(CommandLeaderBoard.NAME, new PacketHandlerLeaderBoard());
-        handleMap.put(CommandReplicate.NAME, new PacketHandlerReplicate());
         handleMap.put(CommandAuthFail.NAME, new PacketHandlerAuthFail());
         handleMap.put(CommandAuthOk.NAME, new PacketHandlerAuthOk());
     }
@@ -72,6 +75,26 @@ public class ServerConnectionSocket {
         log.info("Received packet: " + msg);
         if (session.isOpen()) {
             handlePacket(msg);
+        }
+    }
+
+    @OnWebSocketMessage
+    public void onBytePacket(@NotNull byte[] buf, int offset, int length) {
+        try {
+            ByteArrayInputStream bis = new ByteArrayInputStream(buf, offset, length);
+            GZIPInputStream gis = new GZIPInputStream(bis);
+            BufferedReader br = new BufferedReader(new InputStreamReader(gis, "UTF-8"));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            br.close();
+            gis.close();
+            bis.close();
+            handlerReplicate.handle(sb.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
