@@ -35,13 +35,13 @@ public class ServerConnectionSocket {
     @NotNull
     private static final Map<String, TextPacketHandler> textHandleMap = new HashMap<>();
     @NotNull
-    private static final Map<String, BinaryPacketHandler> unZippedPacketHandleMap = new HashMap<>();
+    private static final Map<String, UncompressedPacketHandler> uncompressedPacketHandleMap = new HashMap<>();
 
     static {
         textHandleMap.put(CommandLeaderBoard.NAME, new TextPacketHandlerLeaderBoard());
         textHandleMap.put(CommandAuthFail.NAME, new TextPacketHandlerAuthFail());
         textHandleMap.put(CommandAuthOk.NAME, new TextPacketHandlerAuthOk());
-        unZippedPacketHandleMap.put(CommandReplicate.NAME, new BinaryPacketHandlerReplicate());
+        uncompressedPacketHandleMap.put(CommandReplicate.NAME, new UncompressedPacketHandlerReplicate());
     }
 
     @NotNull
@@ -97,7 +97,7 @@ public class ServerConnectionSocket {
             String msg = sb.toString();
             log.info("Received compressed packet: " + msg);
             if (session.isOpen()) {
-                handleUnZippedPacket(msg);
+                handleUncompressedPacket(msg);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -114,11 +114,11 @@ public class ServerConnectionSocket {
         }
     }
 
-    private void handleUnZippedPacket(@NotNull String msg) {
+    private void handleUncompressedPacket(@NotNull String msg) {
         JsonObject json = JSONHelper.getJSONObject(msg);
         try {
             String name = json.get("command").getAsString();
-            unZippedPacketHandleMap.get(name).handle(msg);
+            uncompressedPacketHandleMap.get(name).handle(msg);
         } catch (Exception e) {
             log.warn("Command error in received zipped packet: " + e);
         }

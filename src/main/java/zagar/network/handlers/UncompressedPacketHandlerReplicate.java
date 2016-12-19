@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class BinaryPacketHandlerReplicate implements BinaryPacketHandler {
+public class UncompressedPacketHandlerReplicate implements UncompressedPacketHandler {
   @NotNull
-  private static final Logger log = LogManager.getLogger(BinaryPacketHandlerReplicate.class);
+  private static final Logger log = LogManager.getLogger(UncompressedPacketHandlerReplicate.class);
 
     @Override
     public void handle(@NotNull String msg) {
