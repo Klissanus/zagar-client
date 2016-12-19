@@ -42,7 +42,7 @@
     <properties>
         <hibernate.version>5.1.0.Final</hibernate.version>
         <jersey.version>2.7</jersey.version>
-        <clientServerProtocol.version>1.2.0</clientServerProtocol.version>
+        <clientServerProtocol.version>2.2.0</clientServerProtocol.version>
     </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
