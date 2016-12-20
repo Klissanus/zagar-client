@@ -34,7 +34,6 @@ public class Game {
     private static final Logger log = LogManager.getLogger(Game.class);
     @NotNull
     public static String[] leaderBoard = new String[10];
-    public static double maxSizeX, maxSizeY, minSizeX, minSizeY;
     public static float zoom;
     public static int score;
     @NotNull
@@ -102,7 +101,7 @@ public class Game {
             if (o2 == null) {
                 return -1;
             }
-            return Double.compare(o1.getSize(), o2.getSize());
+            return Double.compare(o1.getMass(), o2.getMass());
         });
     }
 
@@ -188,7 +187,7 @@ public class Game {
 
             for(Cell c: cells) {
                 totalScore += c.getMass();
-                totalSize += c.getSize();
+                totalSize += c.getRadius();
             }
 
             score = totalScore;
@@ -217,7 +216,7 @@ public class Game {
                 double y = (mousePos.getY() - (frame.getY() + frame.getHeight() / 2)) / zoom;
 
 
-                double size = getPlayers().stream().map(Cell::getSize).max(Double::compare).orElse(1.0);
+                double size = getPlayers().stream().map(Cell::getRadius).max(Double::compare).orElse(1.0);
                 double dx = x / Math.max(Math.abs(x)/10f, size);
                 double dy = y / Math.max(Math.abs(y)/10f, size);
 

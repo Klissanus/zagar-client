@@ -45,7 +45,6 @@ public class GameCanvas extends JPanel {
         }
 
         if (!Game.getPlayers().isEmpty()) {
-            int size = 1;
 
             double avgX = 0;
             double avgY = 0;
@@ -62,16 +61,7 @@ public class GameCanvas extends JPanel {
 
             g.setStroke(new BasicStroke(2));
 
-            for (double i = avgX - (getWidth() / 2) / Game.zoom; i < avgX + (getWidth() / 2) / Game.zoom; i += 100) {
-                i = (int) (i / 100) * 100;
-                int x = (int) ((i - avgX) * Game.zoom) + getWidth() / 2 - size / 2;
-                g.drawLine((int) x, (int) Game.minSizeY, (int) x, (int) Game.maxSizeY);
-            }
-            for (double i = avgY - (getHeight() / 2) / Game.zoom; i < avgY + (getHeight() / 2) / Game.zoom; i += 100) {
-                i = (int) (i / 100) * 100;
-                int y = (int) ((i - avgY) * Game.zoom) + getHeight() / 2 - size / 2;
-                g.drawLine((int) Game.minSizeX, (int) y, (int) Game.maxSizeX, (int) y);
-            }
+            drawGrid(g, avgX, avgY);
         }
 
         g.setFont(fontCells);
@@ -85,9 +75,39 @@ public class GameCanvas extends JPanel {
             }
         });
 
+        drawScore(g, Game.score);
+
+        drawLeaderboard(g, Game.leaderBoard);
+
+        g.dispose();
+
+        Graphics gg = this.getGraphics();
+        gg.drawImage(screen, 0, 0, null);
+        gg.dispose();
+    }
+
+    private void drawGrid(@NotNull Graphics2D g, double avgX, double avgY) {
+        final int minSizeX = 0;
+        final int minSizeY = 0;
+        final int maxSizeX = getWidth();
+        final int maxSizeY = getHeight();
+
+        for (double i = avgX - (getWidth() / 2) / Game.zoom; i < avgX + (getWidth() / 2) / Game.zoom; i += 100) {
+            i = (int) (i / 100) * 100;
+            int x = (int) ((i - avgX) * Game.zoom) + getWidth() / 2;
+            g.drawLine(x, minSizeY, x, maxSizeY);
+        }
+        for (double i = avgY - (getHeight() / 2) / Game.zoom; i < avgY + (getHeight() / 2) / Game.zoom; i += 100) {
+            i = (int) (i / 100) * 100;
+            int y = (int) ((i - avgY) * Game.zoom) + getHeight() / 2;
+            g.drawLine(minSizeX, y, maxSizeX, y);
+        }
+    }
+
+    private void drawScore(@NotNull Graphics2D g, int score) {
         g.setFont(font);
 
-        String scoreString = "Score: " + Game.score;
+        String scoreString = "Score: " + score;
 
         g.setColor(new Color(0, 0, 0, 0.5f));
 
@@ -97,7 +117,9 @@ public class GameCanvas extends JPanel {
         g.setColor(Color.WHITE);
 
         g.drawString(scoreString, 20, getHeight() - 50);
+    }
 
+    private void drawLeaderboard(@NotNull Graphics2D g, @NotNull String[] leaderBoard) {
         int i = 0;
 
         g.setFont(fontLB);
@@ -106,18 +128,12 @@ public class GameCanvas extends JPanel {
 
         g.setFont(fontCells);
 
-        for (String s : Game.leaderBoard) {
+        for (String s : leaderBoard) {
             if (s != null) {
                 g.drawString(s, getWidth() - 110 - getStringWidth(g, s) / 2, 40 + 22 * (i + 1));
             }
             i++;
         }
-
-        g.dispose();
-
-        Graphics gg = this.getGraphics();
-        gg.drawImage(screen, 0, 0, null);
-        gg.dispose();
     }
 
     private int getStringWidth(Graphics2D g, String string) {

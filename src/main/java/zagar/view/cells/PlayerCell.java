@@ -4,8 +4,11 @@ import main.java.zagar.Main;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.awt.font.TextAttribute;
 import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
+import java.awt.geom.Rectangle2D;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by xakep666 on 18.12.16.
@@ -26,20 +29,33 @@ public final class PlayerCell extends Cell {
     @Override
     protected void addShape(@NotNull Graphics2D g, @NotNull Point2D centerCoordinate) {
         super.addShape(g, centerCoordinate);
-        Font font = Main.getFrame().getCanvas().fontCells;
         double x = getRenderCoordinate().getX();
         double y = getRenderCoordinate().getY();
-        double size = getSize();
+        double radius = getRadius();
 
-        BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-
-        FontMetrics fm = img.getGraphics().getFontMetrics(font);
-        int fontSize = fm.stringWidth(name);
-        outlineString(g, name, (int) (x + size / 2 - fontSize / 2), (int) (y + size / 2));
-
+        //select maximal string by length
         String mass = "[" + getMass() + "]";
+        Font font = calculateFontWidth(radius, name.length() > mass.length() ? name : mass, g);
+
+        FontMetrics fm = g.getFontMetrics(font);
+
+        int nameSize = fm.stringWidth(name);
+        outlineString(g, name, (int) (x + radius - nameSize / 2), (int) (y + radius));
+
         int massSize = fm.stringWidth(mass);
-        outlineString(g, mass, (int) (x + size / 2 - massSize / 2), (int) (y + size / 2 + 17));
+        outlineString(g, mass, (int) (x + radius - massSize / 2), (int) (y + radius + 17));
+    }
+
+    @NotNull
+    private Font calculateFontWidth(double radius, @NotNull String str, @NotNull Graphics2D g) {
+        Font font = new Font(Main.getFrame().getCanvas().fontCells.getAttributes());
+        Rectangle2D rectangle2D = g.getFontMetrics().getStringBounds(str, g);
+        font = font.deriveFont((float) (font.getSize2D() * radius * 2 / rectangle2D.getWidth()));
+        //enable kerning
+        Map<TextAttribute, Object> attrs = new HashMap<>();
+        attrs.put(TextAttribute.KERNING, TextAttribute.KERNING_ON);
+        font = font.deriveFont(attrs);
+        return font;
     }
 
     private void outlineString(Graphics2D g, String string, int x, int y) {

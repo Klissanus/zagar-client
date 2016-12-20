@@ -13,20 +13,20 @@ import java.util.Random;
 public abstract class Cell {
     @NotNull
     private final Point2D coordinate;
-    @NotNull
-    private Point2D renderCoordinate;
     private final double mass;
-    private final double size;
-    private double sizeRender;
+    private final double radius;
     @NotNull
     private final Color color;
+    @NotNull
+    private Point2D renderCoordinate;
+    private double sizeRender;
 
     Cell(@NotNull Point2D coordinate, @NotNull Color color, double mass, double radius) {
         this.coordinate = coordinate;
         this.renderCoordinate = coordinate;
         this.mass = mass;
-        this.size = radius;
-        this.sizeRender = this.size;
+        this.radius = radius;
+        this.sizeRender = this.radius;
         this.color = color;
     }
 
@@ -43,7 +43,7 @@ public abstract class Cell {
                 renderCoordinate.getX() - (renderCoordinate.getX() - coordinate.getX()) / 5f,
                 renderCoordinate.getY() - (renderCoordinate.getY() - coordinate.getY()) / 5f
         );
-        sizeRender -= (sizeRender - size) / 9f;
+        sizeRender -= (sizeRender - radius) / 9f;
     }
 
     public void render(@NotNull Graphics2D g, double scale) {
@@ -78,7 +78,11 @@ public abstract class Cell {
     }
 
     protected void addShape(@NotNull Graphics2D g, @NotNull Point2D centerCoordinate) {
-        Ellipse2D figure = new Ellipse2D.Double(centerCoordinate.getX(), centerCoordinate.getY(), getSize(), getSize());
+        Ellipse2D figure = new Ellipse2D.Double(
+                centerCoordinate.getX(),
+                centerCoordinate.getY(),
+                getRadius() * 2,
+                getRadius() * 2);
         g.fill(figure);
     }
 
@@ -91,8 +95,8 @@ public abstract class Cell {
         return mass;
     }
 
-    public double getSize() {
-        return size;
+    public double getRadius() {
+        return radius;
     }
 
     @NotNull
